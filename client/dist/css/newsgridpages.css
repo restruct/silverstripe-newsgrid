@@ -1,0 +1,30 @@
+/* 
+    Document   : gridfieldpages
+    Created on : May 19, 2014, 5:25:14 PM
+    Author     : mic
+    Description:
+        Some basic styling of pages managed from GridFields appearing in SiteTree
+*/
+
+.class-NewsGridPage > a > span.text > span:first-child:before { 
+	content: url('../../images/icon-overlay.png');
+}
+
+.cms table.ss-gridfield-table tr td .btn-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  float: left;
+  margin-right: 6px;
+}
+
+.cms table.ss-gridfield-table tr td .modified {
+  margin-left: 5px;
+  color: #7E7470;
+  background-color: #fff0bc;
+  padding: 1px 3px;
+  border: 1px solid #C9B800;
+  font-size: 80%;
+  border-radius: 3px;
+  text-transform: uppercase;
+}

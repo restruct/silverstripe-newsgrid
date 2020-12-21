@@ -1,0 +1,49 @@
+---
+Name: newsgrid
+---
+
+
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_css:
+    - 'restruct-apps/silverstripe-newsgrid:client/dist/css/newsgridpages.css'
+
+Restruct\NewsGrid\NewsGridHolder:
+  extensions:
+    - Restruct\Essentials\Extensions\CustomLumberjack
+
+Restruct\NewsGrid\NewsGridPage:
+  show_in_sitetree: false
+  extensions:
+    - Restuct\FeaturedImage\FeaturedImageExtension
+
+---
+Name: newsgridembargo
+Only:
+  classexists: EmbargoExpirySchedulerExtension
+---
+Restruct\NewsGrid\NewsGridPage:
+  extensions:
+    - EmbargoExpirySchedulerExtension
+
+---
+Name: newsgridfilterable
+Only:
+  classexists: Restruct\FilterableArchive\Extensions\FilterableHolderExtension
+---
+Restruct\NewsGrid\NewsGridHolder:
+  extensions:
+    - Restruct\FilterableArchive\Extensions\FilterableHolderExtension
+  pagination_control_tab: "Root.Structure"
+  #pagination_insert_before: "SubPages"
+  managed_object_class: Restruct\NewsGrid\NewsGridPage
+  managed_object_date_field: "Date"
+Restruct\NewsGrid\NewsGridHolderController:
+  extensions:
+    - Restruct\FilterableArchive\Extensions\FilterableHolderControllerExtension
+Restruct\NewsGrid\NewsGridPage:
+  extensions:
+    - Restruct\FilterableArchive\Extensions\FilterableItemExtension
+
+Restruct\FilterableArchive\FilterableCategory:
+  extensions:
+    - Restruct\NewsGrid\Extensions\FilterableCategoryExtension

@@ -1,0 +1,29 @@
+{
+  "name": "restruct-apps/silverstripe-newsgrid",
+  "description": "Manage News items from a Gridfield to prevent cluttering the sitetree",
+  "type": "silverstripe-vendormodule",
+  "keywords": [
+    "silverstripe",
+    "excludechildren",
+    "sitetree",
+    "gridfield",
+    "news",
+    "updates"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "restruct",
+      "email": "apps@restruct.nl"
+    }
+  ],
+  "require": {
+    "restruct-apps/silverstripe-softscheduler": "*"
+  },
+  "extra": {
+    "expose": [
+      "client/dist/css"
+    ],
+    "installer-name": "newsgrid"
+  }
+}
