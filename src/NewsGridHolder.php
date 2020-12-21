@@ -1,9 +1,9 @@
 <?php
 
-namespace Restruct\NewsGrid {
+namespace Restruct\SilverStripe\NewsGrid {
 
     use Page;
-    use Restruct\Essentials\Fields\GridFieldSimpleSiteTreeState;
+    use Restruct\SilverStripe\Fields\GridFieldSimpleSiteTreeState;
     use SilverStripe\Forms\GridField\GridFieldDataColumns;
     use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
 

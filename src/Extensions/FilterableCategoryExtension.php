@@ -1,18 +1,10 @@
 <?php
 
-namespace Restruct\NewsGrid\Extensions {
+namespace Restruct\SilverStripe\NewsGrid\Extensions {
 
-    use Restruct\FilterableArchive\FilterableCategory;
-    use Restruct\FilterableArchive\FilterableTag;
-    use Restruct\NewsGrid\NewsGridPage;
-    use SilverStripe\Control\Controller;
-    use SilverStripe\Control\HTTPRequest;
-    use SilverStripe\Core\Injector\Injector;
-    use SilverStripe\Forms\FieldList;
-    use SilverStripe\Forms\ListboxField;
+    use Restruct\SilverStripe\NewsGrid\NewsGridPage;
     use SilverStripe\ORM\DataExtension;
     use SilverStripe\ORM\DataObject;
-    use SilverStripe\TagField\TagField;
 
     class FilterableCategoryExtension extends DataExtension
     {

@@ -1,4 +1,4 @@
 SilverStripe\ORM\DatabaseAdmin:
   classname_value_remapping:
-    NewsGridHolder: 'Restruct\NewsGrid\NewsGridHolder'
-    NewsGridPage: 'Restruct\NewsGrid\NewsGridPage'
+    NewsGridHolder: 'Restruct\SilverStripe\NewsGrid\NewsGridHolder'
+    NewsGridPage: 'Restruct\SilverStripe\NewsGrid\NewsGridPage'

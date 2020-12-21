@@ -1,6 +1,6 @@
 <?php
 
-namespace Restruct\NewsGrid {
+namespace Restruct\SilverStripe\NewsGrid {
 
     use PageController;
 

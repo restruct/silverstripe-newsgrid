@@ -1,6 +1,6 @@
 <?php
 
-namespace Restruct\NewsGrid {
+namespace Restruct\SilverStripe\NewsGrid {
 
     use Page;
     use SilverStripe\Forms\CheckboxField;
@@ -11,8 +11,8 @@ namespace Restruct\NewsGrid {
 
         private static $table_name = 'NewsGridPage';
 
-
         private static $singular_name = 'NewsItem';
+
         private static $plural_name = 'NewsItems';
         private static $description = 'Create a news item';
 

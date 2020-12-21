@@ -7,43 +7,45 @@ SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
     - 'restruct/silverstripe-newsgrid:client/dist/css/newsgridpages.css'
 
-Restruct\NewsGrid\NewsGridHolder:
-  extensions:
-    - Restruct\NewsGrid\Extensions\CustomLumberjack
+#Restruct\NewsGrid\NewsGridHolder:
+#  extensions:
+#    - Restruct\NewsGrid\Extensions\CustomLumberjack
 
 Restruct\NewsGrid\NewsGridPage:
   show_in_sitetree: false
   extensions:
-    - Restuct\FeaturedImage\FeaturedImageExtension
+    - Restruct\SilverStripe\FeaturedImages\FeaturedImageExtension
 
 ---
 Name: newsgridembargo
 Only:
-  classexists: EmbargoExpirySchedulerExtension
+  classexists: Restruct\SilverStripe\SoftScheduler\EmbargoExpirySchedulerExtension
 ---
 Restruct\NewsGrid\NewsGridPage:
   extensions:
-    - EmbargoExpirySchedulerExtension
+    - Restruct\SilverStripe\SoftScheduler\EmbargoExpirySchedulerExtension
 
 ---
 Name: newsgridfilterable
 Only:
-  classexists: Restruct\FilterableArchive\Extensions\FilterableHolderExtension
+  classexists: Restruct\SilverStripe\FilterableArchive\Extensions\FilterableArchiveHolderControllerExtension
 ---
-Restruct\NewsGrid\NewsGridHolder:
+Restruct\SilverStripe\NewsGrid\NewsGridHolder:
   extensions:
-    - Restruct\FilterableArchive\Extensions\FilterableHolderExtension
+    - Restruct\SilverStripe\FilterableArchive\FilterableArchiveHolderExtension
   pagination_control_tab: "Root.Structure"
   #pagination_insert_before: "SubPages"
-  managed_object_class: Restruct\NewsGrid\NewsGridPage
+  managed_object_class: Restruct\SilverStripe\NewsGrid\NewsGridPage
   managed_object_date_field: "Date"
-Restruct\NewsGrid\NewsGridHolderController:
-  extensions:
-    - Restruct\FilterableArchive\Extensions\FilterableHolderControllerExtension
-Restruct\NewsGrid\NewsGridPage:
-  extensions:
-    - Restruct\FilterableArchive\Extensions\FilterableItemExtension
 
-Restruct\FilterableArchive\FilterableCategory:
+Restruct\SilverStripe\NewsGrid\NewsGridHolderController:
   extensions:
-    - Restruct\NewsGrid\Extensions\FilterableCategoryExtension
+    - Restruct\Silverstripe\FilterableArchive\FilterableArchiveHolderControllerExtension
+
+Restruct\SilverStripe\NewsGrid\NewsGridPage:
+  extensions:
+    - Restruct\SilverStripe\FilterableArchive\FilterableArchiveItemExtension
+
+Restruct\SilverStripe\FilterableArchive\FilterableCategory:
+  extensions:
+    - Restruct\SilverStripe\NewsGrid\Extensions\FilterableCategoryExtension
