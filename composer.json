@@ -15,9 +15,14 @@
     {
       "name": "restruct",
       "email": "apps@restruct.nl"
+    },
+    {
+      "name": "PatJnr",
+      "email": "patrick@chitosystems.com"
     }
   ],
   "require": {
+    "silverstripe/lumberjack": "^2.0.2",
     "restruct/silverstripe-softscheduler": "*"
   },
   "extra": {

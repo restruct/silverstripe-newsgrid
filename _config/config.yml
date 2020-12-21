@@ -9,7 +9,7 @@ SilverStripe\Admin\LeftAndMain:
 
 Restruct\NewsGrid\NewsGridHolder:
   extensions:
-    - Restruct\Essentials\Extensions\CustomLumberjack
+    - Restruct\NewsGrid\Extensions\CustomLumberjack
 
 Restruct\NewsGrid\NewsGridPage:
   show_in_sitetree: false
