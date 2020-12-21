@@ -1,5 +1,5 @@
 {
-  "name": "restruct-apps/silverstripe-newsgrid",
+  "name": "restruct/silverstripe-newsgrid",
   "description": "Manage News items from a Gridfield to prevent cluttering the sitetree",
   "type": "silverstripe-vendormodule",
   "keywords": [
@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "restruct-apps/silverstripe-softscheduler": "*"
+    "restruct/silverstripe-softscheduler": "*"
   },
   "extra": {
     "expose": [

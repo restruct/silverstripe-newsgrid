@@ -5,7 +5,7 @@ Name: newsgrid
 
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
-    - 'restruct-apps/silverstripe-newsgrid:client/dist/css/newsgridpages.css'
+    - 'restruct/silverstripe-newsgrid:client/dist/css/newsgridpages.css'
 
 Restruct\NewsGrid\NewsGridHolder:
   extensions:

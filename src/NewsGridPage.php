@@ -20,7 +20,7 @@ namespace Restruct\NewsGrid {
         private static $show_in_sitetree = false; //@TODO: fix this... (why is the config not being applied?)
         //private static $allowed_children = "none";
 
-        private static $icon = 'restruct-apps/silverstripe-newsgrid:client/images/newsholder.png';
+        private static $icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
 
         public  function singular_name()
         {

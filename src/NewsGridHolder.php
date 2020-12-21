@@ -19,7 +19,7 @@ namespace Restruct\NewsGrid {
         private static $allowed_children = [ NewsGridPage::class ];
         private static $apply_sortable = false;
 
-        private static $icon = 'restruct-apps/silverstripe-newsgrid:client/images/newsholder.png';
+        private static $icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
 
         private static $has_one = [];
 
