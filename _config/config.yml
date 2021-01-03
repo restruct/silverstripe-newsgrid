@@ -49,3 +49,4 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 Restruct\SilverStripe\FilterableArchive\FilterableCategory:
   extensions:
     - Restruct\SilverStripe\NewsGrid\Extensions\FilterableCategoryExtension
+
