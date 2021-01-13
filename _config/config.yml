@@ -7,9 +7,9 @@ SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
     - 'restruct/silverstripe-newsgrid:client/dist/css/newsgridpages.css'
 
-#Restruct\NewsGrid\NewsGridHolder:
-#  extensions:
-#    - Restruct\NewsGrid\Extensions\CustomLumberjack
+Restruct\SilverStripe\NewsGrid\NewsGridHolder:
+  extensions:
+    - Restruct\NewsGrid\Extensions\CustomLumberjack
 
 Restruct\NewsGrid\NewsGridPage:
   show_in_sitetree: false
