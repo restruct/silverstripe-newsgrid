@@ -11,7 +11,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridHolder:
   extensions:
     - Restruct\SilverStripe\NewsGrid\Extensions\CustomLumberjack
 
-Restruct\NewsGrid\NewsGridPage:
+Restruct\SilverStripe\NewsGrid\NewsGridPage:
   show_in_sitetree: false
   extensions:
     - Restruct\SilverStripe\FeaturedImages\FeaturedImageExtension
@@ -21,7 +21,7 @@ Name: newsgridembargo
 Only:
   classexists: Restruct\SilverStripe\SoftScheduler\EmbargoExpirySchedulerExtension
 ---
-Restruct\NewsGrid\NewsGridPage:
+Restruct\SilverStripe\NewsGrid\NewsGridPage:
   extensions:
     - Restruct\SilverStripe\SoftScheduler\EmbargoExpirySchedulerExtension
 
