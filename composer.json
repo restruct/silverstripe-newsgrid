@@ -27,7 +27,8 @@
   },
   "extra": {
     "expose": [
-      "client/dist/css"
+      "client/dist/css",
+      "client/images"
     ],
     "installer-name": "newsgrid"
   }
