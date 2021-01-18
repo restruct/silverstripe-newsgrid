@@ -28,7 +28,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 ---
 Name: newsgridfilterable
 Only:
-  classexists: Restruct\Silverstripe\FilterableArchive\FilterableArchiveHolderControllerExtension
+  classexists: Restruct\SilverStripe\FilterableArchive\FilterableArchiveHolderControllerExtension
 ---
 Restruct\SilverStripe\NewsGrid\NewsGridHolder:
   extensions:
@@ -40,7 +40,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridHolder:
 
 Restruct\SilverStripe\NewsGrid\NewsGridHolderController:
   extensions:
-    - Restruct\Silverstripe\FilterableArchive\FilterableArchiveHolderControllerExtension
+    - Restruct\SilverStripe\FilterableArchive\FilterableArchiveHolderControllerExtension
 
 Restruct\SilverStripe\NewsGrid\NewsGridPage:
   extensions:
