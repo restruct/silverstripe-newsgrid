@@ -2,10 +2,15 @@
 
 namespace Restruct\SilverStripe\NewsGrid {
 
+    use HLCL\Models\SpecialistRole;
     use Page;
+    use Restruct\Essentials\Fields\GridFieldConfig_EditableOrderable;
     use Restruct\SilverStripe\Fields\GridFieldSimpleSiteTreeState;
+    use SilverStripe\Forms\GridField\GridField;
+    use SilverStripe\Forms\GridField\GridFieldConfig;
     use SilverStripe\Forms\GridField\GridFieldDataColumns;
     use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
+    use SilverStripe\View\Requirements;
 
     class NewsGridHolder extends Page
     {
@@ -30,34 +35,53 @@ namespace Restruct\SilverStripe\NewsGrid {
 
         public function getCMSFields()
         {
-
             // update relationlist to specific/correct class (instead of general SiteTree) to be able to sort on Date in gridfield
-            $this->afterExtending('updateCMSFields', function ($fields) {
-                $excluded = $this->getExcludedSiteTreeClassNames();
-                if ( count($excluded) == 1 ) {
-                    $excludedClass = array_pop($excluded);
-                    $pages = $excludedClass::get()->filter([
-                        'ParentID' => $this->owner->ID,
-                    ]);
-                    $fields->dataFieldByName('ChildPages')->setList($pages);
-                }
-            });
+//            $this->afterExtending('updateCMSFields', function ($fields) {
+//                $excluded = $this->getExcludedSiteTreeClassNames();
+//                if ( count($excluded) == 1 ) {
+//                    $excludedClass = array_pop($excluded);
+//                    $pages = $excludedClass::get()->filter([
+//                        'ParentID' => $this->owner->ID,
+//                    ]);
+//                    $fields->dataFieldByName('ChildPages')->setList($pages);
+//                }
+//            });
 
             $fields = parent::getCMSFields();
 
-            $gfconf = $fields->dataFieldByName('ChildPages')->getConfig();
+//            // GridFieldPages
+//            $gfconf = $fields->dataFieldByName('Subpages')->getConfig();
+//            // simplify status column
+//            $gfconf->removeComponentsByType(GridFieldSiteTreeState::class);
+//            $gfconf->addComponent(new GridFieldSimpleSiteTreeState());
+//            // add scheduled status column
+//            $dataColumns = $gfconf->getComponentByType(new GridFieldDataColumns());
+//            $dataColumns->setDisplayFields([
+//                'Title'                     => 'Title',
+//                'Date'                      => 'Date',
+//                'ScheduledStatusDataColumn' => 'Scheduling',
+//            ]);
 
-            // simplify status column
-            $gfconf->removeComponentsByType(GridFieldSiteTreeState::class);
-            $gfconf->addComponent(new GridFieldSimpleSiteTreeState());
+            // LumberJack
+            /** @var GridField $gf */
+            $gf = $fields->dataFieldByName('ChildPages');
+            if ( null !== $gf ) {
+                /** @var GridFieldConfig $config */
+                $config = $gf->getConfig();
+                /** @var GridFieldDataColumns $dataColumns */
+                $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
+                $displayfields = $dataColumns->getDisplayFields($gf);
+//                $displayfields = array_reverse($displayfields, true);
+                $displayfields[ 'ScheduledStatusDataColumn' ] = 'Scheduling';
+//                $dataColumns->setDisplayFields(array_reverse($displayfields, true));
+                $dataColumns->setDisplayFields($displayfields);
 
-            // add scheduled status column
-            $dataColumns = $gfconf->getComponentByType(new GridFieldDataColumns());
-            $dataColumns->setDisplayFields([
-                'Title'                     => 'Title',
-                'Date'                      => 'Date',
-                'ScheduledStatusDataColumn' => 'Scheduling',
-            ]);
+                Requirements::customCSS('.table td.col-ScheduledStatusDataColumn {
+                    padding-top: .1rem;
+                    padding-bottom: .1rem;
+                    vertical-align: middle;
+                    }', 'ScheduledStatusDataColumnTweaks');
+            }
 
             return $fields;
         }

@@ -1,38 +1,45 @@
 ---
 Name: newsgrid
 ---
-
-
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
     - 'restruct/silverstripe-newsgrid:client/dist/css/newsgridpages.css'
 
 Restruct\SilverStripe\NewsGrid\NewsGridHolder:
+#  extensions:
+#    - Restruct\SilverStripe\NewsGrid\Extensions\CustomLumberjack
+#    - Restruct\Silverstripe\GridFieldPages\GridFieldPageHolderExtension
+#  add_default_gridfield: true
   extensions:
-    - Restruct\SilverStripe\NewsGrid\Extensions\CustomLumberjack
+    - Restruct\Silverstripe\AdminTweaks\Extensions\SelectiveLumberjack
+  hide_from_cms_tree:
+    - Restruct\SilverStripe\NewsGrid\NewsGridPage
+  allowed_children:
+    - Restruct\SilverStripe\NewsGrid\NewsGridPage
 
 Restruct\SilverStripe\NewsGrid\NewsGridPage:
-  show_in_sitetree: false
   extensions:
     - Restruct\SilverStripe\FeaturedImages\FeaturedImageExtension
+    - Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
+#    - Restruct\Silverstripe\GridFieldPages\GridFieldPageExtension
 
----
-Name: newsgridembargo
-Only:
-  classexists: Restruct\SilverStripe\SoftScheduler\EmbargoExpirySchedulerExtension
----
-Restruct\SilverStripe\NewsGrid\NewsGridPage:
-  extensions:
-    - Restruct\SilverStripe\SoftScheduler\EmbargoExpirySchedulerExtension
+#---
+#Name: newsgridembargo
+#Only:
+#  classexists: Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
+#---
+#Restruct\SilverStripe\NewsGrid\NewsGridPage:
+#  extensions:
+#    - Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
 
 ---
 Name: newsgridfilterable
 Only:
-  classexists: Restruct\SilverStripe\FilterableArchive\FilterableArchiveHolderControllerExtension
+  classexists: Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension
 ---
 Restruct\SilverStripe\NewsGrid\NewsGridHolder:
   extensions:
-    - Restruct\SilverStripe\FilterableArchive\FilterableArchiveHolderExtension
+    - Restruct\SilverStripe\FilterableArchive\Extensions\HolderExtension
   pagination_control_tab: "Root.Structure"
   #pagination_insert_before: "SubPages"
   managed_object_class: Restruct\SilverStripe\NewsGrid\NewsGridPage
@@ -40,13 +47,13 @@ Restruct\SilverStripe\NewsGrid\NewsGridHolder:
 
 Restruct\SilverStripe\NewsGrid\NewsGridHolderController:
   extensions:
-    - Restruct\SilverStripe\FilterableArchive\FilterableArchiveHolderControllerExtension
+    - Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension
 
 Restruct\SilverStripe\NewsGrid\NewsGridPage:
   extensions:
-    - Restruct\SilverStripe\FilterableArchive\FilterableArchiveItemExtension
+    - Restruct\SilverStripe\FilterableArchive\Extensions\ItemExtension
 
-Restruct\SilverStripe\FilterableArchive\FilterableCategory:
-  extensions:
-    - Restruct\SilverStripe\NewsGrid\Extensions\FilterableCategoryExtension
+#Restruct\SilverStripe\FilterableArchive\FilterableCategory:
+#  extensions:
+#    - Restruct\SilverStripe\NewsGrid\Extensions\FilterableCategoryExtension
 
