@@ -35,32 +35,7 @@ namespace Restruct\SilverStripe\NewsGrid {
 
         public function getCMSFields()
         {
-            // update relationlist to specific/correct class (instead of general SiteTree) to be able to sort on Date in gridfield
-//            $this->afterExtending('updateCMSFields', function ($fields) {
-//                $excluded = $this->getExcludedSiteTreeClassNames();
-//                if ( count($excluded) == 1 ) {
-//                    $excludedClass = array_pop($excluded);
-//                    $pages = $excludedClass::get()->filter([
-//                        'ParentID' => $this->owner->ID,
-//                    ]);
-//                    $fields->dataFieldByName('ChildPages')->setList($pages);
-//                }
-//            });
-
             $fields = parent::getCMSFields();
-
-//            // GridFieldPages
-//            $gfconf = $fields->dataFieldByName('Subpages')->getConfig();
-//            // simplify status column
-//            $gfconf->removeComponentsByType(GridFieldSiteTreeState::class);
-//            $gfconf->addComponent(new GridFieldSimpleSiteTreeState());
-//            // add scheduled status column
-//            $dataColumns = $gfconf->getComponentByType(new GridFieldDataColumns());
-//            $dataColumns->setDisplayFields([
-//                'Title'                     => 'Title',
-//                'Date'                      => 'Date',
-//                'ScheduledStatusDataColumn' => 'Scheduling',
-//            ]);
 
             // LumberJack
             /** @var GridField $gf */
@@ -85,8 +60,12 @@ namespace Restruct\SilverStripe\NewsGrid {
 
             return $fields;
         }
-
-
+        
+        // Custom getter to return NewsGridPage directly instead of SiteTree (allows sorting on Date which SiteTree doesn't)
+        public function getLumberjackPagesForGridfield($excluded = [])
+        {
+            return NewsGridPage::get()->filter('ParentID', $this->ID);
+        }
     }
 
 }
