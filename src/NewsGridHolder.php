@@ -46,9 +46,8 @@ namespace Restruct\SilverStripe\NewsGrid {
                 /** @var GridFieldDataColumns $dataColumns */
                 $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
                 $displayfields = $dataColumns->getDisplayFields($gf);
-//                $displayfields = array_reverse($displayfields, true);
+                $displayfields[ 'Date' ] = 'Date';
                 $displayfields[ 'ScheduledStatusDataColumn' ] = 'Scheduling';
-//                $dataColumns->setDisplayFields(array_reverse($displayfields, true));
                 $dataColumns->setDisplayFields($displayfields);
 
                 Requirements::customCSS('.table td.col-ScheduledStatusDataColumn {
