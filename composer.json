@@ -22,8 +22,11 @@
     }
   ],
   "require": {
+    "silverstripe/vendor-plugin": "^1.0",
+    "silverstripe/framework": "^4"
     "silverstripe/lumberjack": "^2.0.2",
-    "restruct/silverstripe-softscheduler": "*"
+    "restruct/silverstripe-softscheduler": "@stable",
+    "restruct/silverstripe-admintweaks": "@stable"
   },
   "extra": {
     "expose": [
