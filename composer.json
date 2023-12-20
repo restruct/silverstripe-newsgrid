@@ -16,8 +16,10 @@
     "silverstripe/vendor-plugin": "^1.0",
     "silverstripe/framework": "^4.0",
     "silverstripe/lumberjack": "^2.0.2",
-    "restruct/silverstripe-softscheduler": "@stable",
-    "restruct/silverstripe-admintweaks": "@stable"
+    "restruct/silverstripe-admintweaks": "@stable",
+    "restruct/silverstripe-featuredimages": "@stable",
+    "restruct/silverstripe-filterablearchive": "@stable",
+    "restruct/silverstripe-softscheduler": "@stable"
   },
   "extra": {
     "expose": [

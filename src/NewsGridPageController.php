@@ -1,11 +1,9 @@
 <?php
 
-namespace Restruct\SilverStripe\NewsGrid {
+namespace Restruct\SilverStripe\NewsGrid;
 
-    use PageController;
+class NewsGridPageController
+    extends \PageController
+{
 
-    class NewsGridPageController extends PageController
-    {
-
-    }
 }
