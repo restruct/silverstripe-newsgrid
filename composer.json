@@ -17,9 +17,11 @@
     "silverstripe/framework": "^4.0",
     "silverstripe/lumberjack": "^2.0.2",
     "restruct/silverstripe-admintweaks": "@stable",
-    "restruct/silverstripe-featuredimages": "@stable",
-    "restruct/silverstripe-filterablearchive": "@stable",
-    "restruct/silverstripe-softscheduler": "@stable"
+    "restruct/silverstripe-featuredimages": "@stable"
+  },
+  "suggest": {
+    "restruct/silverstripe-filterablearchive": "Let readers filter newsitems by date, tag or category",
+    "restruct/silverstripe-softscheduler": "Schedule newsitems for automatic publication/expiry on specified dates"
   },
   "extra": {
     "expose": [

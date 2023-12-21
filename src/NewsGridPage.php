@@ -58,8 +58,11 @@ class NewsGridPage
 //        $fields->insertBefore('Categories', CheckboxField::create('NoAutoImage', 'Do not auto-insert the page image into the content'));
         $fields->insertAfter('FeaturedImages', CheckboxField::create('NoAutoImage', 'Do NOT auto-insert the page image into the content'));
 
-        // Move content field above softscheduler inputs
+        // Reorder some fields
         $fields->insertBefore($fields->dataFieldByName('Content'), 'SoftScheduler');
+        if($catsField = $fields->dataFieldByName('Categories')) $fields->insertBefore($catsField, 'Date');
+        if($tagsField = $fields->dataFieldByName('Tags')) $fields->insertBefore($tagsField, 'Date');
+
 
         return $fields;
     }

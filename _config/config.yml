@@ -20,17 +20,9 @@ Restruct\SilverStripe\NewsGrid\NewsGridHolder:
 Restruct\SilverStripe\NewsGrid\NewsGridPage:
   extensions:
     - Restruct\SilverStripe\FeaturedImages\FeaturedImageExtension
-    - Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
+#    - Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
 #    - Restruct\Silverstripe\GridFieldPages\GridFieldPageExtension
 
-#---
-#Name: newsgridembargo
-#Only:
-#  classexists: Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
-#---
-#Restruct\SilverStripe\NewsGrid\NewsGridPage:
-#  extensions:
-#    - Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
 
 ---
 Name: newsgridfilterable
@@ -40,10 +32,12 @@ Only:
 Restruct\SilverStripe\NewsGrid\NewsGridHolder:
   extensions:
     - Restruct\SilverStripe\FilterableArchive\Extensions\HolderExtension
-  pagination_control_tab: "Root.Structure"
+  pagination_control_tab: "Root.Filtering"
   #pagination_insert_before: "SubPages"
   managed_object_class: Restruct\SilverStripe\NewsGrid\NewsGridPage
   managed_object_date_field: "Date"
+  categories_active: false
+  tags_active: false
 
 Restruct\SilverStripe\NewsGrid\NewsGridHolderController:
   extensions:
@@ -57,3 +51,12 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 #  extensions:
 #    - Restruct\SilverStripe\NewsGrid\Extensions\FilterableCategoryExtension
 
+
+---
+Name: newsgridembargo
+Only:
+  classexists: Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
+---
+Restruct\SilverStripe\NewsGrid\NewsGridPage:
+  extensions:
+    - Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension

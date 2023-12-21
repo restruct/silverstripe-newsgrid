@@ -33,14 +33,13 @@ class NewsGridHolder
         $fields = parent::getCMSFields();
 
         // LumberJack
-        /** @var GridField $gf */
-        $gf = $fields->dataFieldByName('ChildPages');
-        if ( null !== $gf ) {
+        /** @var GridField $newsItemsGridField */
+        if ($newsItemsGridField = $fields->dataFieldByName('ChildPages')) {
             /** @var GridFieldConfig $config */
-            $config = $gf->getConfig();
+            $config = $newsItemsGridField->getConfig();
             /** @var GridFieldDataColumns $dataColumns */
             $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
-            $displayfields = $dataColumns->getDisplayFields($gf);
+            $displayfields = $dataColumns->getDisplayFields($newsItemsGridField);
             $displayfields[ 'Date' ] = 'Date';
             $displayfields[ 'ScheduledStatusDataColumn' ] = 'Scheduling';
             $dataColumns->setDisplayFields($displayfields);
@@ -50,6 +49,14 @@ class NewsGridHolder
                 padding-bottom: .1rem;
                 vertical-align: middle;
                 }', 'ScheduledStatusDataColumnTweaks');
+
+            // Make Content field slightly smaller and move newsitems below it
+            if($ContentField = $fields->dataFieldByName('Content')) {
+                $ContentField->setRows(10)->removeExtraClass('stacked');
+
+                $fields->removeByName('ChildPages');
+                $fields->insertAfter($newsItemsGridField, 'Content');
+            }
         }
 
         return $fields;
