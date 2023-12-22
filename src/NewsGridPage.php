@@ -3,12 +3,11 @@
 namespace Restruct\SilverStripe\NewsGrid;
 
 use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\FieldList;
 
 class NewsGridPage
     extends \Page
 {
-
     private static $table_name = 'NewsGridPage';
     private static $singular_name = 'NewsItem';
     private static $plural_name = 'NewsItems';
@@ -19,6 +18,9 @@ class NewsGridPage
     //private static $allowed_children = "none";
 
     private static $icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
+
+    // For filterableArchive:
+//    private static $field_for_date_filter = 'Date';
 
     private  static $default_sort = "Date DESC";
 
@@ -41,27 +43,26 @@ class NewsGridPage
 
     public function populateDefaults()
     {
-        //$this->Date = date('dd-MM-yyyy');
         $this->Date = date('Y-m-d');
         parent::populateDefaults();
     }
 
     public function getCMSFields()
     {
+        /** @var FieldList $fields */
         $fields = parent::getCMSFields();
-
-        $Datepckr = DateField::create('Date');
-        //$Datepckr->setConfig('dateformat', 'dd-MM-yyyy'); // global setting
-        //$Datepckr->setConfig('showcalendar', 1); // field-specific setting
-        $fields->addFieldToTab("Root.Main", $Datepckr, 'FeaturedImages');
 
 //        $fields->insertBefore('Categories', CheckboxField::create('NoAutoImage', 'Do not auto-insert the page image into the content'));
         $fields->insertAfter('FeaturedImages', CheckboxField::create('NoAutoImage', 'Do NOT auto-insert the page image into the content'));
 
         // Reorder some fields
-        $fields->insertBefore($fields->dataFieldByName('Content'), 'SoftScheduler');
-        if($catsField = $fields->dataFieldByName('Categories')) $fields->insertBefore($catsField, 'Date');
-        if($tagsField = $fields->dataFieldByName('Tags')) $fields->insertBefore($tagsField, 'Date');
+        if($schedulerField = $fields->fieldByName('Root.Main.SoftScheduler')) {
+            $fields->removeByName('SoftScheduler'); // compositefield (includes subfields), we need to remove and re-insert to prevent duplicate fields warning
+            $fields->insertAfter('Content', $schedulerField);
+        }
+
+//        if($catsField = $fields->dataFieldByName('Categories')) $fields->insertBefore('Date', $catsField);
+//        if($tagsField = $fields->dataFieldByName('Tags')) $fields->insertBefore('Date', $tagsField);
 
 
         return $fields;

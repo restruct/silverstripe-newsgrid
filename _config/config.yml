@@ -20,6 +20,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridHolder:
 Restruct\SilverStripe\NewsGrid\NewsGridPage:
   extensions:
     - Restruct\SilverStripe\FeaturedImages\FeaturedImageExtension
+# The below are now optional and will be applied if their class exists:
 #    - Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension
 #    - Restruct\Silverstripe\GridFieldPages\GridFieldPageExtension
 
@@ -36,6 +37,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridHolder:
   #pagination_insert_before: "SubPages"
   managed_object_class: Restruct\SilverStripe\NewsGrid\NewsGridPage
   managed_object_date_field: "Date"
+  # NOTE: change these to true-ish to also filter newsitems by categories and/or tags
   categories_active: false
   tags_active: false
 
