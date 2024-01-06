@@ -5,6 +5,7 @@ namespace Restruct\SilverStripe\NewsGrid;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
 use SilverStripe\View\Requirements;
 
 class NewsGridHolder
@@ -31,23 +32,28 @@ class NewsGridHolder
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $configuredDatefield = $this->config()->get('managed_object_date_field');
 
         // LumberJack
         /** @var GridField $newsItemsGridField */
         if ($newsItemsGridField = $fields->dataFieldByName('ChildPages')) {
             /** @var GridFieldConfig $config */
             $config = $newsItemsGridField->getConfig();
+            // Replace GridFieldSiteTreeState with simplified version
+            $SiteTreeStateComp = $config->getComponentByType(GridFieldSiteTreeState::class);
+            $config->addComponent(new \Restruct\SilverStripe\Fields\GridFieldSimpleSiteTreeState(), $SiteTreeStateComp);
+            $config->removeComponent($SiteTreeStateComp);
             /** @var GridFieldDataColumns $dataColumns */
             $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
             $displayfields = $dataColumns->getDisplayFields($newsItemsGridField);
-            $displayfields[ 'Date' ] = 'Date';
+            $displayfields[ $configuredDatefield ] = 'Date';
             $displayfields[ 'ScheduledStatusDataColumn' ] = 'Scheduling';
             $dataColumns->setDisplayFields($displayfields);
 
             Requirements::customCSS('.table td.col-ScheduledStatusDataColumn {
-                padding-top: .1rem;
-                padding-bottom: .1rem;
-                vertical-align: middle;
+                    padding-top: .1rem;
+                    padding-bottom: .1rem;
+                    vertical-align: middle;
                 }', 'ScheduledStatusDataColumnTweaks');
 
             // Make Content field slightly smaller and move newsitems below it

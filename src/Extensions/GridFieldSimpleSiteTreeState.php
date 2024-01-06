@@ -12,25 +12,25 @@ namespace Restruct\SilverStripe\Fields {
 
         public function getColumnContent($gridField, $record, $columnName)
         {
-            if ( $columnName === "State" ) {
+            if ( $columnName == "State" ) {
+
                 if ( $record->hasMethod("isPublished") ) {
-                    $modifiedLabel = "";
-                    if ( $record->isModifiedOnStage ) {
-                        $modifiedLabel = "<span class='modified'>" . _t("GridFieldSiteTreeState.Modified") . "</span>";
+                    $GFSiteTreeStateClass = parent::class;
+                    $modifiedLabel = '';
+                    if ( $record->isModifiedOnDraft() ) {
+                        $modifiedLabel = '<span class="modified">' . _t("$GFSiteTreeStateClass.Modified", 'Modified') . '</span>';
                     }
 
                     $published = $record->isPublished();
                     if ( !$published ) {
-                        return _t(
-                            "GridFieldSimpleSiteTreeState.Draft",
-                            '<i class="btn-icon gridfield-icon btn-icon-pencil"></i> Draft',
-                            "State for when a post is saved."
+                        return '<i class="font-icon-pencil btn--icon-md"></i>' . _t(
+                            "SilverStripe\CMS\Controllers\ContentController.DRAFT",
+                            'Saved as Draft'
                         );
                     } else {
-                        return _t(
-                                "GridFieldSimpleSiteTreeState.Published",
-                                '<i class="btn-icon gridfield-icon btn-icon-accept"></i> Published',
-                                "State for when a post is published."
+                        return '<i class="font-icon-check-mark-circle btn--icon-md"></i>' . _t(
+                                "\SilverStripe\Lumberjack\Forms\GridFieldSimpleSiteTreeState.Published",
+                                'SilverStripe\CMS\Controllers\ContentController.PUBLISHED'
                             ) . $modifiedLabel;
                     }
                 }

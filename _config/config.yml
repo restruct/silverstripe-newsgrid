@@ -38,8 +38,8 @@ Restruct\SilverStripe\NewsGrid\NewsGridHolder:
   managed_object_class: Restruct\SilverStripe\NewsGrid\NewsGridPage
   managed_object_date_field: "Date"
   # NOTE: change these to true-ish to also filter newsitems by categories and/or tags
-  categories_active: false
-  tags_active: false
+#  categories_active: false
+#  tags_active: false
 
 Restruct\SilverStripe\NewsGrid\NewsGridHolderController:
   extensions:
