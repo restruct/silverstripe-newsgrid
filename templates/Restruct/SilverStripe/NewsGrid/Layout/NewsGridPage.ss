@@ -3,20 +3,6 @@
 
         <div class="col-md-8 col-lg-9 py-3">
 
-<%--            <% if $HolderPage.ArchiveActive %>--%>
-<%--                <small class="text-body-secondary fst-italic me-2">$DateField.Format('d MMMM yyyy')</small>--%>
-<%--            <% end_if %>--%>
-<%--            <% if $HolderPage.CategoriesActive %>--%>
-<%--            <% loop $Categories %>--%>
-<%--                <small class="badge fw-normal text-bg-light text-muted border"><a href="$Link" class="text-decoration-none">$Title</a></small>--%>
-<%--            <% end_loop %>--%>
-<%--            <% end_if %>--%>
-<%--            <% if $HolderPage.TagsActive %>--%>
-<%--            <% loop $Tags %>--%>
-<%--                <small class="badge rounded-pill fw-normal text-bg-light text-muted border text-decoration-none"><a href="$Link" class="text-decoration-none">$Title</a></small>--%>
-<%--            <% end_loop %>--%>
-<%--            <% end_if %>--%>
-
             <% include FilterableProperties LinkFilterProps=true %>
 
             <h1>$Title</h1>
@@ -30,7 +16,8 @@
 
         <div class="col-md-4 col-lg-3 py-4">
 
-            <h3>Related</h3>
+            <% if $RelatedItems.count %>
+            <h3><%t NewsGrid.Related 'Related' %></h3>
 
             <% loop $RelatedItems.limit(3) %>
 
@@ -47,6 +34,7 @@
             </a>
 
             <% end_loop %>
+            <% end_if %>
 
         </div>
 

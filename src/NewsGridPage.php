@@ -60,7 +60,9 @@ class NewsGridPage
         $fields = parent::getCMSFields();
 
 //        $fields->insertBefore('Categories', CheckboxField::create('NoAutoImage', 'Do not auto-insert the page image into the content'));
-        $fields->insertAfter('FeaturedImages', CheckboxField::create('NoAutoImage', 'Do NOT auto-insert the page image into the content'));
+        $fields->insertAfter('FeaturedImages',
+            CheckboxField::create('NoAutoImage', _t('NewsGrid.NoAutoInsertImage', 'Do NOT auto-insert the page image into the content'))
+        );
 
         // Reorder some fields
         if($schedulerField = $fields->fieldByName('Root.Main.SoftScheduler')) {

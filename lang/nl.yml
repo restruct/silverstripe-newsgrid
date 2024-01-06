@@ -1,0 +1,20 @@
+nl:
+  NEWSGRID:
+    NewsItems: Nieuwsberichten
+  NewsGrid:
+    NoAutoInsertImage: 'Voeg de afbeelding NIET automatisch toe in de inhoud van het bericht'
+    Related: Gerelateerd
+  Restruct\SilverStripe\NewsGrid\NewsGridHolder:
+    DESCRIPTION: 'Maak een pagina aan voor uw nieuwsberichten/archief'
+    PLURALNAME: 'Nieuws secties'
+    PLURALS:
+      one: 'Een nieuws sectie'
+      other: '{count} nieuws secties'
+    SINGULARNAME: 'Nieuws sectie'
+  Restruct\SilverStripe\NewsGrid\NewsGridPage:
+    DESCRIPTION: 'Maak een nieuwsitem'
+    PLURALNAME: Nieuwsberichten
+    PLURALS:
+      one: 'Een Nieuwsbericht'
+      other: '{count} Nieuwsberichten'
+    SINGULARNAME: Nieuwsbericht
