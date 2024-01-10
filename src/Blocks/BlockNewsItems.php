@@ -65,7 +65,7 @@ extends BlockContent
     {
         $items = NewsGridPage::get();
 
-        if(isset($this->ExtraData['LimitByCatID'])) {
+        if(!empty($this->ExtraData['LimitByCatID'])) {
             $itemIDs = FilterPropRelation::get()->filter('CategoryID', $this->ExtraData['LimitByCatID'])->column('ItemID');
             $items = $items->filter('ID', count($itemIDs) ? $itemIDs : -1);
         }
