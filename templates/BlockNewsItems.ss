@@ -3,9 +3,11 @@
     <div class="$SiteConfig.ContainerClass">
         <div class="row">
 
+            <% if $Heading %>
             <div class="col-12">
-                <p class="lead text-uppercase text-center">Gerelateerd nieuws</p>
+                <p class="lead text-uppercase text-center">{$Heading}</p>
             </div>
+            <% end_if %>
 
             <% loop $RecentNewsItems %>
             <% include NewsItemTile %>
