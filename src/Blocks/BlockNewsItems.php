@@ -30,7 +30,7 @@ extends BlockContent
     private static $description = 'Recent Newsitems';
 
     private static $has_heading = true;
-    private static $has_introline = false;
+    private static $has_introline = true;
     private static $has_image = false;
     private static $has_content = false;
     private static $has_bg_image = false;
@@ -48,17 +48,15 @@ extends BlockContent
         $availableCats = NewsGridHolder::get()->relation('Categories');
         $categoriesField = DropdownField::create(
             'ExtraData_LimitByCatID',
-            "Category",
+            "Filter by category",
             $availableCats
         )->setEmptyString('ANY/ALL');
-        $fields->addFieldToTab("Root.Main", $categoriesField);
+        $fields->addFieldToTab("Root.Main", $categoriesField, 'IntroLine');
 
-        // ExtraData functionality
-        if($ExtraData = $this->getExtraData()) foreach ($fields->saveableFields() as $field){
-            if(strpos($field->getName(), 'ExtraData_') === 0) {
-                $field->setValue( $ExtraData[str_replace('ExtraData_', '', $field->getName())] ?? null );
-            }
-        }
+        $fields->replaceField('IntroLine',
+            TextField::create('IntroLine', 'Label for ‘All news’ button/link')
+                ->setDescription('Links to first News-section (leave empty for no button/link)')
+        );
 
         return $fields;
     }
@@ -73,5 +71,15 @@ extends BlockContent
         }
 
         return $items->limit($limit);
+    }
+
+    public function NewsSectionLink()
+    {
+        if(!$this->IntroLine) return null;
+
+        $NewsSection = NewsGridHolder::get()->first();
+        $NewsSection->LinkLabel = $this->IntroLine;
+
+        return $NewsSection;
     }
 }

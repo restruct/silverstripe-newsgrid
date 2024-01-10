@@ -13,6 +13,14 @@
             <% include NewsItemTile %>
             <% end_loop %>
 
+            <% if $NewsSectionLink %>
+            <% with $NewsSectionLink %>
+            <div class="col-12 text-center">
+                <a class="btn btn-secondary px-3" href="$Link">$LinkLabel &rarr;</a>
+            </div>
+            <% end_with %>
+            <% end_if %>
+
         </div>
     </div>
 </div>
