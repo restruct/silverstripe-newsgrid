@@ -6,7 +6,7 @@
             <% include FilterableProperties LinkFilterProps=true %>
 
             <h1>$Title</h1>
-            <% if $FeaturedImage %>{$FeaturedImage.SetWidth(440).setAttribute('class', 'rounded img-fluid float-start col-12 col-lg-7 me-lg-3 mb-2')}<% end_if %>
+            <% if $FeaturedImage && not $NoAutoImage %>{$FeaturedImage.SetWidth(440).setAttribute('class', 'rounded img-fluid float-start col-12 col-lg-7 me-lg-3 mb-2')}<% end_if %>
             $Content
             $Form
 
