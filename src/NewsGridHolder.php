@@ -61,7 +61,7 @@ class NewsGridHolder
                 $ContentField->setRows(10)->removeExtraClass('stacked');
 
                 $fields->removeByName('ChildPages');
-                $fields->insertAfter($newsItemsGridField, 'Content');
+                $fields->insertAfter($newsItemsGridField, $ContentField);
             }
         }
 
