@@ -59,6 +59,9 @@ class NewsGridHolder
             // Make Content field slightly smaller and move newsitems below it
             if($ContentField = $fields->dataFieldByName('Content')) {
                 $ContentField->setRows(10)->removeExtraClass('stacked');
+
+                $fields->removeByName('ChildPages');
+                $fields->insertAfter($newsItemsGridField, $ContentField);
             }
         }
 
