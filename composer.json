@@ -5,9 +5,9 @@
   "license": "MIT",
   "authors": [ { "name": "Restruct", "email": "dev@restruct.nl", "homepage": "https://restruct.nl" } ],
   "require": {
-    "silverstripe/vendor-plugin": "^2",
-    "silverstripe/framework": "^5",
-    "silverstripe/lumberjack": "^3",
+    "silverstripe/vendor-plugin": "@stable",
+    "silverstripe/framework": "^4 || ^5",
+    "silverstripe/lumberjack": "@stable",
     "restruct/silverstripe-admintweaks": "@stable",
     "restruct/silverstripe-featuredimages": "@stable"
   },
