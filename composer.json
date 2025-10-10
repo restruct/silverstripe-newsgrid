@@ -6,10 +6,10 @@
   "authors": [ { "name": "Restruct", "email": "dev@restruct.nl", "homepage": "https://restruct.nl" } ],
   "require": {
     "silverstripe/vendor-plugin": "@stable",
-    "silverstripe/framework": "^4 || ^5",
-    "silverstripe/lumberjack": "@stable",
-    "restruct/silverstripe-admintweaks": "@stable",
-    "restruct/silverstripe-featuredimages": "@stable"
+    "silverstripe/framework": "^6",
+    "silverstripe/lumberjack": "^4",
+    "restruct/silverstripe-admintweaks": "^4",
+    "restruct/silverstripe-featuredimages": "^4"
   },
   "suggest": {
     "restruct/silverstripe-filterablearchive": "Let readers filter newsitems by date, tag or category",

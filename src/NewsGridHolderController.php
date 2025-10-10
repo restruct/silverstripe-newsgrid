@@ -2,8 +2,9 @@
 
 namespace Restruct\SilverStripe\NewsGrid;
 
-class NewsGridHolderController
-    extends \PageController
+use PageController;
+
+class NewsGridHolderController extends PageController
 {
 
 }

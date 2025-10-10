@@ -3,10 +3,9 @@
 namespace Restruct\SilverStripe\NewsGrid\Extensions {
 
     use Restruct\SilverStripe\NewsGrid\NewsGridPage;
-    use SilverStripe\ORM\DataExtension;
-    use SilverStripe\ORM\DataObject;
+    use SilverStripe\Core\Extension;
 
-    class FilterableCategoryExtension extends DataExtension
+    class FilterableCategoryExtension extends Extension
     {
 
         private static $many_many = [

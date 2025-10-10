@@ -2,26 +2,22 @@
 
 namespace Restruct\SilverStripe\NewsGrid;
 
-// Only load if blockbase module installed (prevent 'Class not found' build-error)
-if ( ! \SilverStripe\Core\ClassInfo::exists('Restruct\Silverstripe\BlockBase\Blocks\BlockContent') ) return;
+use SilverStripe\Core\ClassInfo;
 
-use MultipleSelectionTag;
+// Only load if blockbase module installed (prevent 'Class not found' build-error)
+if (! ClassInfo::exists('Restruct\Silverstripe\BlockBase\Blocks\BlockContent')) {
+    return;
+}
 use Restruct\Silverstripe\BlockBase\Blocks\BlockContent;
 use Restruct\SilverStripe\FilterableArchive\FilterPropRelation;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\TagField\StringTagField;
-use SilverStripe\TagField\TagField;
 
 /**
  * Base block class for common functionality (project specific blocks can subclass this, comparable to DataObject)
  */
-class BlockNewsItems
-extends BlockContent
+class BlockNewsItems extends BlockContent
 {
 //    private static $table_name = 'BlockNews';
 
@@ -30,9 +26,13 @@ extends BlockContent
     private static $description = 'Recent Newsitems';
 
     private static $has_heading = true;
+
     private static $has_introline = true;
+
     private static $has_image = false;
+
     private static $has_content = false;
+
     private static $has_bg_image = false;
 
     public function getCMSFields()
@@ -67,7 +67,7 @@ extends BlockContent
 
         if(!empty($this->ExtraData['LimitByCatID'])) {
             $itemIDs = FilterPropRelation::get()->filter('CategoryID', $this->ExtraData['LimitByCatID'])->column('ItemID');
-            $items = $items->filter('ID', count($itemIDs) ? $itemIDs : -1);
+            $items = $items->filter('ID', count($itemIDs) > 0 ? $itemIDs : -1);
         }
 
         return $items->limit($limit);
@@ -75,7 +75,9 @@ extends BlockContent
 
     public function NewsSectionLink()
     {
-        if(!$this->IntroLine) return null;
+        if (!$this->IntroLine) {
+            return null;
+        }
 
         $NewsSection = NewsGridHolder::get()->first();
         $NewsSection->LinkLabel = $this->IntroLine;

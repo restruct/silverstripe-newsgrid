@@ -2,33 +2,39 @@
 
 namespace Restruct\SilverStripe\NewsGrid;
 
+use Override;
+use Page;
+use Restruct\SilverStripe\Fields\GridFieldSimpleSiteTreeState;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
 use SilverStripe\View\Requirements;
 
-class NewsGridHolder
-    extends \Page
+class NewsGridHolder extends Page
 {
     private static $table_name = 'NewsGridHolder';
 
     private static $singular_name = 'News section';
+
     private static $plural_name = 'News sections';
-    private static $description = 'Create a page to contain your news items/archive';
+
+    private static $class_description = 'Create a page to contain your news items/archive';
 
     private static $allowed_children = [ NewsGridPage::class ];
+
     private static $apply_sortable = false;
 
-    private static $icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
+    private static $cms_icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
 
     private static $has_one = [];
 
-    function getLumberjackTitle()
+    public function getLumberjackTitle()
     {
         return _t('NEWSGRID.NewsItems', 'Nieuwsberichten');
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -41,27 +47,39 @@ class NewsGridHolder
             $config = $newsItemsGridField->getConfig();
             // Replace GridFieldSiteTreeState with simplified version
             $SiteTreeStateComp = $config->getComponentByType(GridFieldSiteTreeState::class);
-            $config->addComponent(new \Restruct\SilverStripe\Fields\GridFieldSimpleSiteTreeState(), $SiteTreeStateComp);
+            $config->addComponent(new GridFieldSimpleSiteTreeState(), $SiteTreeStateComp);
             $config->removeComponent($SiteTreeStateComp);
             /** @var GridFieldDataColumns $dataColumns */
             $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
-            $displayfields = $dataColumns->getDisplayFields($newsItemsGridField);
-            $displayfields[ $configuredDatefield ] = 'Date';
-            $displayfields[ 'ScheduledStatusDataColumn' ] = 'Scheduling';
-            $dataColumns->setDisplayFields($displayfields);
 
-            Requirements::customCSS('.table td.col-ScheduledStatusDataColumn {
-                    padding-top: .1rem;
-                    padding-bottom: .1rem;
-                    vertical-align: middle;
-                }', 'ScheduledStatusDataColumnTweaks');
+            // Set explicit display fields to avoid DataList rendering issues
+            $displayfields = [
+                'Title' => 'Title',
+            ];
+
+            // Only add date field if configured
+            if ($configuredDatefield) {
+                $displayfields[ $configuredDatefield ] = 'Date';
+            }
+
+            // Only add ScheduledStatusDataColumn if SoftScheduler is installed
+            if (class_exists('Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension')) {
+                $displayfields[ 'ScheduledStatusDataColumn' ] = 'Scheduling';
+                Requirements::customCSS('.table td.col-ScheduledStatusDataColumn {
+                        padding-top: .1rem;
+                        padding-bottom: .1rem;
+                        vertical-align: middle;
+                    }', 'ScheduledStatusDataColumnTweaks');
+            }
+
+            $dataColumns->setDisplayFields($displayfields);
 
             // Make Content field slightly smaller and move newsitems below it
             if($ContentField = $fields->dataFieldByName('Content')) {
                 $ContentField->setRows(10)->removeExtraClass('stacked');
 
-                $fields->removeByName('ChildPages');
-                $fields->insertAfter($newsItemsGridField, $ContentField);
+                //$fields->removeByName('ChildPages');
+                //$fields->insertAfter($newsItemsGridField, $ContentField);
             }
         }
 

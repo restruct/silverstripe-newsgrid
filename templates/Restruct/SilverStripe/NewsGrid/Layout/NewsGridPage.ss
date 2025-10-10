@@ -3,7 +3,9 @@
 
         <div class="col-md-8 col-lg-9 py-3">
 
-            <% include FilterableProperties LinkFilterProps=true %>
+            <% if $hasMethod('FilterDropdown') %>
+                <% include FilterableProperties LinkFilterProps=true %>
+            <% end_if %>
 
             <h1>$Title</h1>
             <% if $FeaturedImage && not $NoAutoImage %>{$FeaturedImage.SetWidth(440).setAttribute('class', 'rounded img-fluid float-start col-12 col-lg-7 me-lg-3 mb-2')}<% end_if %>

@@ -10,7 +10,9 @@
                 </div>
             </div>
 
-            <% include FilterableArchiveFilter %>
+            <% if $hasMethod('FilterDropdown') %>
+                <% include FilterableArchiveFilter %>
+            <% end_if %>
 
             <ul class="list-unstyled my-3">
                 <% loop $PaginatedItems %>
@@ -19,7 +21,9 @@
                         <% if $FeaturedImage %>{$FeaturedImage.SetWidth(240).setAttribute('class', 'rounded')}<% end_if %>
                         <div class="col-lg-8">
 
-                            <% include FilterableProperties %>
+                            <% if $hasMethod('FilterDropdown') %>
+                                <% include FilterableProperties %>
+                            <% end_if %>
 
                           <h4 class="mb-0">$Title</h4>
                           <p class="text-body">
@@ -32,7 +36,9 @@
                 <% end_loop %>
               </ul>
 
-            <% include FilterableArchiveBootstrapPagination %>
+            <% if $hasMethod('FilterDropdown') %>
+                <% include FilterableArchiveBootstrapPagination %>
+            <% end_if %>
 
         </div>
 
