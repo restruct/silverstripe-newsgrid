@@ -2,6 +2,7 @@
 
 namespace Restruct\SilverStripe\NewsGrid;
 
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
@@ -61,7 +62,12 @@ class NewsGridHolder
                 $ContentField->setRows(10)->removeExtraClass('stacked');
 
                 $fields->removeByName('ChildPages');
-                $fields->insertAfter($newsItemsGridField, $ContentField);
+                // From SS5+, argument order of insertAfter has changed...
+                if(ClassInfo::exists('SilverStripe\Security\SudoMode\SudoModeService')) {
+                    $fields->insertAfter('Content', $newsItemsGridField); // SS5+
+                } else {
+                    $fields->insertAfter($newsItemsGridField, 'Content');
+                }
             }
         }
 
