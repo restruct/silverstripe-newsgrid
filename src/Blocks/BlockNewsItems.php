@@ -8,6 +8,7 @@ use SilverStripe\Core\ClassInfo;
 if (! ClassInfo::exists('Restruct\Silverstripe\BlockBase\Blocks\BlockContent')) {
     return;
 }
+
 use Restruct\Silverstripe\BlockBase\Blocks\BlockContent;
 use Restruct\SilverStripe\FilterableArchive\FilterPropRelation;
 use SilverStripe\Forms\DropdownField;

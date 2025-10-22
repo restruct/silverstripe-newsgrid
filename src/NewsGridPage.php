@@ -52,6 +52,7 @@ class NewsGridPage extends Page
         if ($date->isToday() && (int) $date->TimeDiffIn('minutes') <= 60) {
             return sprintf('(%s)', $date->ago());
         }
+
         return null;
     }
 
