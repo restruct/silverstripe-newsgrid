@@ -2,7 +2,7 @@
 
 ## 3.1.0 (unreleased)
 
-Silverstripe 5 and 6 from one line (`master`). Silverstripe 4 is not supported; projects on it can
+Silverstripe 5 and 6 from one line (`main`, renamed from `master`). Silverstripe 4 is not supported; projects on it can
 stay on the `2.0.x` tags.
 
 ### Upgrading
@@ -17,7 +17,7 @@ stay on the `2.0.x` tags.
 - **The news items grid is back on the Main tab, directly below Content** (issue #1, "Lost
   bugfixes"). The Silverstripe 6 work in 3.0.x had commented this out, so the grid sat on
   Lumberjack's separate tab. The restored code uses the current argument order of
-  `FieldList::insertAfter()`, the fix that 2.0.10 carried on the `ss345` branch only.
+  `FieldList::insertAfter()`, the fix that 2.0.10 carried on the `ss345` branch (now `v2`) only.
 - **Filterable item properties show again** on news item pages and in the News section's list,
   when filterablearchive is installed. 3.0.x guarded them on a holder-only method, so in an item's
   scope they never rendered.
@@ -74,4 +74,4 @@ Silverstripe 6 only (`^6`). Superseded by 3.1.0, which also carries the fixes ab
 
 ## 2.0.x
 
-Silverstripe 4 and 5 (`^4 || ^5`). 2.0.10 and 2.0.11 were tagged from the `ss345` branch.
+Silverstripe 4 and 5 (`^4 || ^5`). 2.0.10 and 2.0.11 were tagged from the `ss345` branch, renamed `v2` at the 3.1.0 release.

@@ -2,8 +2,8 @@ name: CI
 
 on:
   push:
-    # The repository's default branch is still `master`; update this if it is renamed.
-    branches: [master]
+    # The default branch is `main` (renamed from `master` at the 3.1.0 release).
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

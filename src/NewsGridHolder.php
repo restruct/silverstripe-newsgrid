@@ -110,7 +110,7 @@ class NewsGridHolder extends Page
                 # below Content, not on Lumberjack's separate 'ChildPages' tab. The SS6 WIP had commented
                 # this out. The two lines above are the pre-2.0.10 form: they pass the arguments in the
                 # SS4 order (field first), which from SS5 on is (name to insert after, field) - the fix
-                # that 2.0.10 carried on the ss345 branch only. removeByName() drops Lumberjack's tab,
+                # that 2.0.10 carried on the ss345 branch (now v2) only. removeByName() drops Lumberjack's tab,
                 # which is also named 'ChildPages', along with the grid inside it.
                 $fields->removeByName('ChildPages');
                 $fields->insertAfter('Content', $newsItemsGridField);
