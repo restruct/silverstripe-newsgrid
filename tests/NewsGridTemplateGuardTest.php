@@ -4,9 +4,7 @@ namespace Restruct\SilverStripe\NewsGrid\Tests;
 
 use Restruct\SilverStripe\NewsGrid\NewsGridHolder;
 use Restruct\SilverStripe\NewsGrid\NewsGridPage;
-use Restruct\SilverStripe\NewsGrid\NewsGridPageController;
 use Restruct\SilverStripe\NewsGrid\Tests\NewsGridTemplateGuardTest\DateFieldExtension;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\SSViewer;
@@ -87,10 +85,12 @@ class NewsGridTemplateGuardTest extends SapphireTest
 
     public function testNewsItemLayoutRendersTheFilterableProperties()
     {
-        $controller = NewsGridPageController::create($this->makeItem());
-        $controller->setRequest(new HTTPRequest('GET', '/'));
-
-        $html = $this->renderInStubTheme(fn () => $controller->renderWith(['type' => 'Layout', NewsGridPage::class]));
+        // Rendered on the item itself, not through a NewsGridPageController: a controller caches its
+        // failover's methods per class (CustomMethods::$extra_methods), so after this test the stand-in
+        // getDateField() would still be reported by every later NewsGridPageController, and
+        // NewsGridTemplatesTest (which renders through one) would take the guarded branch.
+        $item = $this->makeItem();
+        $html = $this->renderInStubTheme(fn () => $item->renderWith(['type' => 'Layout', NewsGridPage::class]));
 
         $this->assertStringContainsString('<span class="stub-filterable-properties">2026</span>', $html);
         $this->assertStringContainsString('<h1>Guarded item</h1>', $html);
