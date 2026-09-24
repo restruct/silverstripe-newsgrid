@@ -67,6 +67,9 @@ class NewsGridHolder extends Page
             # fatals and the News section cannot be edited. Lumberjack's own button already offers
             # NewsGridPage (show_in_sitetree is false), the only child this holder allows, so use that.
             # Remove once admintweaks' button no longer calls page_type_classes().
+            # Upstream: a restruct/silverstripe-admintweaks issue, "page_type_classes() fatal on SS6"
+            # (with its CMSPagesController check, always false on SS6), is to be filed at the 3.1.0
+            # release; replace this line with that issue's URL once it exists.
             $addNewComp = $config->getComponentByType(GridFieldSiteTreeAddNewButton::class);
             if ($addNewComp && get_class($addNewComp) !== GridFieldSiteTreeAddNewButton::class
                 && !method_exists(SiteTree::class, 'page_type_classes')
