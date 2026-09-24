@@ -11,6 +11,8 @@ stay on the `2.0.x` tags.
   database. What you will notice is listed under "Changed" below.
 - **From 3.0.x (Silverstripe 6):** a `^3` constraint picks this up. The news items grid moves back to
   the Main tab (fixed issue #1, below).
+- **Both:** `formattedPublishDate()` now renders `2 Jan 2026` instead of `2 1 2026` (see "Fixed").
+  If a template or project code relies on the old numeric output, format `$Date` itself instead.
 
 ### Fixed
 
@@ -34,6 +36,10 @@ stay on the `2.0.x` tags.
 - **`BlockNewsItems::NewsSectionLink()` no longer errors when there is no News section.** With a
   label set and no `NewsGridHolder` in the site, it assigned the label on `null`; it now returns
   `null`, so the block renders without the "all news" link.
+- **`NewsGridPage::formattedPublishDate()` shows a readable date.** Its CLDR pattern `d M Y`
+  rendered `2 1 2026`: `M` is the month number and `Y` the week-year, so dates around 1 January
+  could even show the wrong year (30 December 2024 printed as 2025). It is now `d MMM y`, e.g.
+  `2 Jan 2026`. This output dates back to the Silverstripe 4 port.
 - **The SS3 class name remapping runs on Silverstripe 6.** It moved from `DatabaseAdmin` to
   `DbBuild`; `_config/upgrade.yml` now sets it on whichever class exists.
 
@@ -51,7 +57,7 @@ stay on the `2.0.x` tags.
 - `restruct/silverstripe-blockbase` is listed under `suggest`. blockbase itself still requires
   Silverstripe 4 (1.0.8, `dev-main`), so `BlockNewsItems` is not available until a blockbase
   release supports Silverstripe 5/6; the README says so.
-- Adds a behavioural test suite (`tests/`, 46 tests; 3 of them skip on a host with
+- Adds a behavioural test suite (`tests/`, 47 tests; 3 of them skip on a host with
   filterablearchive, see the README). It has been run locally on Silverstripe 5.4 and 6.2
   (PHP 8.3). A CI workflow is added for Silverstripe 5 (PHP 8.1, 8.3) and Silverstripe 6 (PHP 8.3,
   8.4) against MariaDB 11.4, plus a real `dev/build` / `db:build`; **it has not run yet**.

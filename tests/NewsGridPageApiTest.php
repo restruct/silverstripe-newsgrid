@@ -45,7 +45,18 @@ class NewsGridPageApiTest extends SapphireTest
         // Pins the output as documented in the README: 'd M Y' is a CLDR pattern (day, month number,
         // week-year), not PHP date(). Whether to change it to 'd MMM y' is an open release decision;
         // if it changes, this expectation changes with it.
-        $this->assertSame('2 1 2026', $this->makeItem('2026-01-02')->formattedPublishDate());
+        // Decided for 3.1.0: changed to 'd MMM y', so the expectation is now '2 Jan 2026' (was '2 1 2026').
+        //$this->assertSame('2 1 2026', $this->makeItem('2026-01-02')->formattedPublishDate());
+        $this->assertSame('2 Jan 2026', $this->makeItem('2026-01-02')->formattedPublishDate());
+    }
+
+    public function testFormattedPublishDateShowsMonthNameAndCalendarYear()
+    {
+        // 'd MMM y' since 3.1.0: abbreviated month name and calendar year. 30 December 2024 falls in
+        // the first week of 2025, so a week-year pattern (Y) would print 2025 here, and a month-number
+        // pattern (M) would print 12.
+        $this->assertSame('2 Jan 2026', $this->makeItem('2026-01-02')->formattedPublishDate());
+        $this->assertSame('30 Dec 2024', $this->makeItem('2024-12-30')->formattedPublishDate());
     }
 
     public function testDateFieldCommentWithinTheFirstHourOfTheDay()

@@ -49,7 +49,11 @@ class NewsGridPage extends Page
     public function formattedPublishDate()
     {
         //return $this->obj('Date')->Format('Y-m-d');
-        return $this->obj('Date')->Format('d M Y');
+        # 3.1.0: 'd M Y' rendered "2 1 2026". These are CLDR patterns, not PHP date(): M is the month
+        # number and Y the week-year, which differs from the calendar year around 1 January.
+        # 'd MMM y' is day, abbreviated month name and calendar year ("2 Jan 2026").
+        //return $this->obj('Date')->Format('d M Y');
+        return $this->obj('Date')->Format('d MMM y');
     }
 
     // Filterable module: optionally add some extra info/remark to date, eg 'X minutes ago'
