@@ -1,4 +1,23 @@
+---
+Name: newsgrid-upgrade-ss5
+Only:
+  classexists: SilverStripe\ORM\DatabaseAdmin
+---
+# Maps the un-namespaced SS3 class names (micschk/silverstripe-newsgrid 1.x) still stored in the
+# database onto the namespaced classes during dev/build. Silverstripe 5 reads this from DatabaseAdmin.
 SilverStripe\ORM\DatabaseAdmin:
+  classname_value_remapping:
+    NewsGridHolder: 'Restruct\SilverStripe\NewsGrid\NewsGridHolder'
+    NewsGridPage: 'Restruct\SilverStripe\NewsGrid\NewsGridPage'
+
+---
+Name: newsgrid-upgrade-ss6
+Only:
+  classexists: SilverStripe\Dev\Command\DbBuild
+---
+# Silverstripe 6 removed DatabaseAdmin and reads the same remapping from DbBuild; the DatabaseAdmin
+# block above would be set on a class nothing reads, and the remapping would silently not run.
+SilverStripe\Dev\Command\DbBuild:
   classname_value_remapping:
     NewsGridHolder: 'Restruct\SilverStripe\NewsGrid\NewsGridHolder'
     NewsGridPage: 'Restruct\SilverStripe\NewsGrid\NewsGridPage'

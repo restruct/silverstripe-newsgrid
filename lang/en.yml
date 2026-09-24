@@ -1,10 +1,11 @@
-nl:
+en:
   NEWSGRID:
     NewsItems: Newsitems
   NewsGrid:
     NoAutoInsertImage: 'Do NOT auto-insert the page image into the content'
     Related: Related
   Restruct\SilverStripe\NewsGrid\NewsGridHolder:
+    CLASS_DESCRIPTION: 'Create a page to contain your news items/archive'
     DESCRIPTION: 'Create a page to contain your news items/archive'
     PLURALNAME: 'News sections'
     PLURALS:
@@ -12,6 +13,7 @@ nl:
       other: '{count} News sections'
     SINGULARNAME: 'News section'
   Restruct\SilverStripe\NewsGrid\NewsGridPage:
+    CLASS_DESCRIPTION: 'Create a news item'
     DESCRIPTION: 'Create a news item'
     PLURALNAME: NewsItems
     PLURALS:

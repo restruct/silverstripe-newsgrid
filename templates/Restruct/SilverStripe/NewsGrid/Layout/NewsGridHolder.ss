@@ -21,7 +21,8 @@
                         <% if $FeaturedImage %>{$FeaturedImage.SetWidth(240).setAttribute('class', 'rounded')}<% end_if %>
                         <div class="col-lg-8">
 
-                            <% if $hasMethod('FilterDropdown') %>
+                            <%-- Item scope: FilterDropdown lives on the holder, so it is never true here; getDateField comes from filterablearchive's ItemExtension --%>
+                            <% if $hasMethod('getDateField') %>
                                 <% include FilterableProperties %>
                             <% end_if %>
 

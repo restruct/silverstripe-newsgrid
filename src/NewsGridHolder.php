@@ -8,6 +8,8 @@ use Restruct\SilverStripe\Fields\GridFieldSimpleSiteTreeState;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeAddNewButton;
 use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
 use SilverStripe\View\Requirements;
 
@@ -20,6 +22,16 @@ class NewsGridHolder extends Page
     private static $plural_name = 'News sections';
 
     private static $class_description = 'Create a page to contain your news items/archive';
+
+    # Silverstripe 5 names for $class_description (above) and $cms_icon (below). SS 5.4 reads
+    # $class_description and falls back to the deprecated $description only when that is empty, so on 5.4
+    # $description is unused; it is kept for older SS5 releases that ^5 still allows (not tested here).
+    # SS5 (5.4 checked) takes the icon only from $icon ($cms_icon is SS6). SS6 reads neither, so both
+    # pairs are declared to keep the page type described and iconed on both majors. Drop these when SS5
+    # leaves the range.
+    private static $description = 'Create a page to contain your news items/archive';
+
+    private static $icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
 
     private static $allowed_children = [ NewsGridPage::class ];
 
@@ -49,6 +61,22 @@ class NewsGridHolder extends Page
             $SiteTreeStateComp = $config->getComponentByType(GridFieldSiteTreeState::class);
             $config->addComponent(new GridFieldSimpleSiteTreeState(), $SiteTreeStateComp);
             $config->removeComponent($SiteTreeStateComp);
+
+            # Workaround, Silverstripe 6 only: admintweaks' SelectiveLumberjack swaps in its own add-new
+            # button, which calls SiteTree::page_type_classes() - removed in SS6 - so rendering this grid
+            # fatals and the News section cannot be edited. Lumberjack's own button already offers
+            # NewsGridPage (show_in_sitetree is false), the only child this holder allows, so use that.
+            # Remove once admintweaks' button no longer calls page_type_classes().
+            # Upstream: a restruct/silverstripe-admintweaks issue, "page_type_classes() fatal on SS6"
+            # (with its CMSPagesController check, always false on SS6), is to be filed at the 3.1.0
+            # release; replace this line with that issue's URL once it exists.
+            $addNewComp = $config->getComponentByType(GridFieldSiteTreeAddNewButton::class);
+            if ($addNewComp && get_class($addNewComp) !== GridFieldSiteTreeAddNewButton::class
+                && !method_exists(SiteTree::class, 'page_type_classes')
+            ) {
+                $config->addComponent(new GridFieldSiteTreeAddNewButton('buttons-before-left'), $addNewComp);
+                $config->removeComponent($addNewComp);
+            }
             /** @var GridFieldDataColumns $dataColumns */
             $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
 
@@ -80,6 +108,15 @@ class NewsGridHolder extends Page
 
                 //$fields->removeByName('ChildPages');
                 //$fields->insertAfter($newsItemsGridField, $ContentField);
+
+                # Restored (issue #1, "Lost bugfixes"): the news items grid sits on the Main tab directly
+                # below Content, not on Lumberjack's separate 'ChildPages' tab. The SS6 WIP had commented
+                # this out. The two lines above are the pre-2.0.10 form: they pass the arguments in the
+                # SS4 order (field first), which from SS5 on is (name to insert after, field) - the fix
+                # that 2.0.10 carried on the ss345 branch (now v2) only. removeByName() drops Lumberjack's tab,
+                # which is also named 'ChildPages', along with the grid inside it.
+                $fields->removeByName('ChildPages');
+                $fields->insertAfter('Content', $newsItemsGridField);
             }
         }
 

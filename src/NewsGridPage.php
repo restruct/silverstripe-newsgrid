@@ -17,6 +17,14 @@ class NewsGridPage extends Page
 
     private static $class_description = 'Create a news item';
 
+    # Silverstripe 5 names for $class_description and $cms_icon. SS 5.4 reads $class_description and falls
+    # back to the deprecated $description only when that is empty, so on 5.4 $description is unused; it
+    # is kept for older SS5 releases that ^5 still allows (not tested here). SS5 (5.4 checked) takes the
+    # icon only from $icon; $cms_icon is the SS6 name. SS6 reads neither. Drop these when SS5 leaves the range.
+    private static $description = 'Create a news item';
+
+    private static $icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
+
     private static $can_be_root = false;
 
     private static $show_in_sitetree = false;
@@ -41,7 +49,12 @@ class NewsGridPage extends Page
     public function formattedPublishDate()
     {
         //return $this->obj('Date')->Format('Y-m-d');
-        return $this->obj('Date')->Format('d M Y');
+        # 3.1.0: 'd M Y' rendered "2 1 2026". These are CLDR patterns, not PHP date(): M is the month
+        # number and Y the week-year, which differs from the calendar year around 1 January.
+        # 'd MMM y' is day, abbreviated month name and calendar year ("2 Jan 2026").
+        # No locale is passed, so the month name follows i18n::get_locale() (nl_NL: "2 jan 2026").
+        //return $this->obj('Date')->Format('d M Y');
+        return $this->obj('Date')->Format('d MMM y');
     }
 
     // Filterable module: optionally add some extra info/remark to date, eg 'X minutes ago'

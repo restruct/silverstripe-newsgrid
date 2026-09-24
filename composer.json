@@ -5,20 +5,31 @@
   "license": "MIT",
   "authors": [ { "name": "Restruct", "email": "dev@restruct.nl", "homepage": "https://restruct.nl" } ],
   "require": {
-    "silverstripe/vendor-plugin": "@stable",
-    "silverstripe/framework": "^6",
-    "silverstripe/lumberjack": "^4",
-    "restruct/silverstripe-admintweaks": "^4",
-    "restruct/silverstripe-featuredimages": "^4"
+    "php": "^8.1",
+    "silverstripe/vendor-plugin": "^2 || ^3",
+    "silverstripe/framework": "^5 || ^6",
+    "silverstripe/lumberjack": "^3 || ^4",
+    "restruct/silverstripe-admintweaks": "^3 || ^4",
+    "restruct/silverstripe-featuredimages": "^4 || ^5"
+  },
+  "require-dev": {
+    "silverstripe/recipe-testing": "^3 || ^4"
   },
   "suggest": {
     "restruct/silverstripe-filterablearchive": "Let readers filter newsitems by date, tag or category",
-    "restruct/silverstripe-softscheduler": "Schedule newsitems for automatic publication/expiry on specified dates"
+    "restruct/silverstripe-softscheduler": "Schedule newsitems for automatic publication/expiry on specified dates",
+    "restruct/silverstripe-blockbase": "Adds the BlockNewsItems block (recent news items), declared only when blockbase is installed (needs a blockbase release for Silverstripe 5/6)"
   },
   "extra": {
     "expose": [
       "client"
     ],
     "installer-name": "newsgrid"
-  }
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/restruct"
+    }
+  ]
 }
