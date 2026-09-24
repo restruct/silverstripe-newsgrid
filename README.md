@@ -95,7 +95,9 @@ Each of these is picked up automatically when the package is installed, and igno
 - **[restruct/silverstripe-blockbase](https://github.com/restruct/blockbase)**: declares the
   `BlockNewsItems` block, which shows the most recent news items (optionally limited to one
   filterablearchive category) with an optional link to the first News section. Without blockbase
-  the class is not declared at all.
+  the class is not declared at all. **Not usable yet on Silverstripe 5 or 6:** blockbase's
+  releases so far (up to 1.0.8, and `dev-main`) require Silverstripe 4, so this integration needs
+  a blockbase release that supports Silverstripe 5/6.
 
 ## Public API
 

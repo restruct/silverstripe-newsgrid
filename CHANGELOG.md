@@ -48,7 +48,9 @@ stay on the `2.0.x` tags.
   `managed_object_date_field` is set, and Scheduling only when softscheduler is installed) instead
   of merging into the default summary fields; the filterablearchive includes in the templates
   render only when that module is installed.
-- `restruct/silverstripe-blockbase` is listed under `suggest`.
+- `restruct/silverstripe-blockbase` is listed under `suggest`. blockbase itself still requires
+  Silverstripe 4 (1.0.8, `dev-main`), so `BlockNewsItems` is not available until a blockbase
+  release supports Silverstripe 5/6; the README says so.
 - Adds a behavioural test suite (`tests/`, 46 tests; 3 of them skip on a host with
   filterablearchive, see the README). It has been run locally on Silverstripe 5.4 and 6.2
   (PHP 8.3). A CI workflow is added for Silverstripe 5 (PHP 8.1, 8.3) and Silverstripe 6 (PHP 8.3,
