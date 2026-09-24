@@ -76,6 +76,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 | `managed_object_date_field` | `NewsGridHolder` | not set (set to `Date` when filterablearchive is installed) | When set, the news items grid shows that field as a "Date" column. Without it the grid shows the title only. |
 | `hide_from_cms_tree` | `NewsGridHolder` | `[NewsGridPage]` | Page classes left out of the CMS site tree under a News section. |
 | `default_sort` | `NewsGridPage` | `Date DESC` | News items are listed newest first. |
+| `apply_sortable` | `NewsGridHolder` | `false` | **No effect with this module alone.** Only `micschk/silverstripe-gridfieldpages` reads it (its `GridFieldPageHolderExtension`, Silverstripe 4 only), which `_config/config.yml` leaves commented out. With that extension applied, `true` adds drag-and-drop ordering to its pages grid. |
 
 The CMS stylesheet `client/css/newsgridpages.css` is added to every admin screen through
 `LeftAndMain.extra_requirements_css`.
