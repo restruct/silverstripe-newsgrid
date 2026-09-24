@@ -106,7 +106,7 @@ Each of these is picked up automatically when the package is installed, and igno
 | `formattedPublishDate()` | `NewsGridPage` | The item's `Date` through `Format('d M Y')`. That is a CLDR pattern, not a PHP `date()` one, so it renders as `2 1 2026` (day, month number, week-year); use `$Date.Format('d MMM y')` in a template for `2 Jan 2026`. |
 | `DateFieldComment()` | `NewsGridPage` | `(x minutes ago)` for items dated within the last hour; requires filterablearchive. |
 | `RecentNewsItems($limit = 3)` | `BlockNewsItems` | The most recent news items, optionally filtered by category. |
-| `NewsSectionLink()` | `BlockNewsItems` | The first News section, labelled for the "all news" link, or `null`. |
+| `NewsSectionLink()` | `BlockNewsItems` | The first News section, labelled for the "all news" link, or `null` when no label is set or no News section exists. |
 
 In templates, `$NoAutoImage` on a news item tells the layout not to insert the featured image into
 the content automatically.

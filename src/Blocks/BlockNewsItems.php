@@ -81,6 +81,10 @@ class BlockNewsItems extends BlockContent
         }
 
         $NewsSection = NewsGridHolder::get()->first();
+        # No News section yet: nothing to link to (and nothing to put the label on)
+        if (!$NewsSection) {
+            return null;
+        }
         $NewsSection->LinkLabel = $this->IntroLine;
 
         return $NewsSection;

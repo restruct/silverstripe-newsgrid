@@ -97,6 +97,16 @@ class BlockNewsItemsTest extends SapphireTest
         $this->assertNull($this->makeBlock()->NewsSectionLink());
     }
 
+    public function testNewsSectionLinkIsNullWithoutANewsSection()
+    {
+        // A label is set but no NewsGridHolder exists: nothing to link to, and no error
+        $block = $this->makeBlock();
+        $block->IntroLine = 'All news';
+
+        $this->assertSame(0, NewsGridHolder::get()->count());
+        $this->assertNull($block->NewsSectionLink());
+    }
+
     public function testNewsSectionLinkIsTheFirstNewsSectionLabelled()
     {
         $first = NewsGridHolder::create(['Title' => 'First news']);

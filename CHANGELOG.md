@@ -31,6 +31,9 @@ stay on the `2.0.x` tags.
   defaults (the grid was titled "Nieuwsberichten").
 - **Page type descriptions are translated on Silverstripe 6**, which reads only the
   `CLASS_DESCRIPTION` key; it is now provided next to the legacy `DESCRIPTION`.
+- **`BlockNewsItems::NewsSectionLink()` no longer errors when there is no News section.** With a
+  label set and no `NewsGridHolder` in the site, it assigned the label on `null`; it now returns
+  `null`, so the block renders without the "all news" link.
 - **The SS3 class name remapping runs on Silverstripe 6.** It moved from `DatabaseAdmin` to
   `DbBuild`; `_config/upgrade.yml` now sets it on whichever class exists.
 
@@ -46,7 +49,8 @@ stay on the `2.0.x` tags.
   of merging into the default summary fields; the filterablearchive includes in the templates
   render only when that module is installed.
 - `restruct/silverstripe-blockbase` is listed under `suggest`.
-- Adds a behavioural test suite (`tests/`). It has been run locally on Silverstripe 5.4 and 6.2
+- Adds a behavioural test suite (`tests/`, 46 tests; 3 of them skip on a host with
+  filterablearchive, see the README). It has been run locally on Silverstripe 5.4 and 6.2
   (PHP 8.3). A CI workflow is added for Silverstripe 5 (PHP 8.1, 8.3) and Silverstripe 6 (PHP 8.3,
   8.4) against MariaDB 11.4, plus a real `dev/build` / `db:build`; **it has not run yet**.
 - `Extensions\CustomLumberjack` (not applied by default: `_config/config.yml` leaves it commented
