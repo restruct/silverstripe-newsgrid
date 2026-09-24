@@ -1,7 +1,10 @@
 <div class="col-md-6 col-xl-4 newsitem-tile-holder p-3">
     <a class="card d-block text-decoration-none p-3 bg-primary-light _block-item-holder"  href="$Link">
 <%--        <% if $FeaturedImage %>{$FeaturedImage.SetWidth(320).setAttribute('class', 'rounded w-100')}<% end_if %>--%>
+        <%-- FilterableProperties ships with filterablearchive (optional): unguarded, a missing include throws --%>
+        <% if $hasMethod('getDateField') %>
         <% include FilterableProperties %>
+        <% end_if %>
         <h4 class="item-title mb-0" style="min-height: 8rem;">$Title</h4>
 <%--        <p class="text-body">--%>
 <%--            $Content.FirstParagraph--%>

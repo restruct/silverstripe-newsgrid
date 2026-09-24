@@ -3,7 +3,8 @@
 
         <div class="col-md-8 col-lg-9 py-3">
 
-            <% if $hasMethod('FilterDropdown') %>
+            <%-- A news item is not a holder, so FilterDropdown is never present here; getDateField comes from filterablearchive's ItemExtension --%>
+            <% if $hasMethod('getDateField') %>
                 <% include FilterableProperties LinkFilterProps=true %>
             <% end_if %>
 
