@@ -125,9 +125,10 @@ jobs:
           <?xml version="1.0" encoding="UTF-8"?>
           <!-- Warning-to-error escalation is the RUNNER's behaviour and differs by PHPUnit
                major: 9 (SS5) converts warnings by default, 11 (SS6) has no such attribute.
-               failOnWarning is pinned so a warning behaves identically on every leg. -->
+               failOnWarning is pinned so a warning behaves identically on every leg.
+               failOnEmptyTestSuite: a suite that finds no tests fails instead of passing. -->
           <phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php" colors="true"
-                   failOnWarning="true">
+                   failOnWarning="true" failOnEmptyTestSuite="true">
               <testsuites>
                   <testsuite name="newsgrid">
                       <directory>vendor/restruct/silverstripe-newsgrid/tests</directory>
@@ -167,17 +168,23 @@ jobs:
       - name: Run tests
         working-directory: app-host
         # Flushing the test manifest differs per major:
-        # - SS6 (PHPUnit 11) reads SS_PHPUNIT_FLUSH=1; a `flush=1` argument does nothing there.
+        # - SS6 (PHPUnit 11) reads SS_PHPUNIT_FLUSH=1. A bare `flush=1` argument is NOT ignored
+        #   there: PHPUnit 11 treats it as a test path, so it must not be passed on that leg.
         # - SS5 (PHPUnit 9) ignores SS_PHPUNIT_FLUSH; it flushes on a `flush=1` argument, which
         #   only works after a PATH argument (with --testsuite it becomes a file name and the run
         #   aborts). So each leg is given the form its runner actually reads.
+        #
+        # --fail-on-empty-test-suite on every run: a path or suite that resolves to no tests (a
+        # dist install without tests/, a renamed directory) exits non-zero instead of passing
+        # green with "No tests executed". PHPUnit 9.6 accepts the option too (it is just not in
+        # its --help); phpunit.xml also sets failOnEmptyTestSuite for runs without the flag.
         run: |
           if [ "${{ matrix.silverstripe }}" = "5" ]; then
-            vendor/bin/phpunit vendor/restruct/silverstripe-newsgrid/tests flush=1
-            vendor/bin/phpunit app/tests flush=1
+            vendor/bin/phpunit --fail-on-empty-test-suite vendor/restruct/silverstripe-newsgrid/tests flush=1
+            vendor/bin/phpunit --fail-on-empty-test-suite app/tests flush=1
           else
-            SS_PHPUNIT_FLUSH=1 vendor/bin/phpunit --testsuite newsgrid
-            SS_PHPUNIT_FLUSH=1 vendor/bin/phpunit --testsuite consumer
+            SS_PHPUNIT_FLUSH=1 vendor/bin/phpunit --fail-on-empty-test-suite --testsuite newsgrid
+            SS_PHPUNIT_FLUSH=1 vendor/bin/phpunit --fail-on-empty-test-suite --testsuite consumer
           fi
 
       - name: Boot the app and build the database
