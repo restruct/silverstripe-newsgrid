@@ -8,6 +8,8 @@ use Restruct\SilverStripe\Fields\GridFieldSimpleSiteTreeState;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeAddNewButton;
 use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
 use SilverStripe\View\Requirements;
 
@@ -57,6 +59,19 @@ class NewsGridHolder extends Page
             $SiteTreeStateComp = $config->getComponentByType(GridFieldSiteTreeState::class);
             $config->addComponent(new GridFieldSimpleSiteTreeState(), $SiteTreeStateComp);
             $config->removeComponent($SiteTreeStateComp);
+
+            # Workaround, Silverstripe 6 only: admintweaks' SelectiveLumberjack swaps in its own add-new
+            # button, which calls SiteTree::page_type_classes() - removed in SS6 - so rendering this grid
+            # fatals and the News section cannot be edited. Lumberjack's own button already offers
+            # NewsGridPage (show_in_sitetree is false), the only child this holder allows, so use that.
+            # Remove once admintweaks' button no longer calls page_type_classes().
+            $addNewComp = $config->getComponentByType(GridFieldSiteTreeAddNewButton::class);
+            if ($addNewComp && get_class($addNewComp) !== GridFieldSiteTreeAddNewButton::class
+                && !method_exists(SiteTree::class, 'page_type_classes')
+            ) {
+                $config->addComponent(new GridFieldSiteTreeAddNewButton('buttons-before-left'), $addNewComp);
+                $config->removeComponent($addNewComp);
+            }
             /** @var GridFieldDataColumns $dataColumns */
             $dataColumns = $config->getComponentByType(GridFieldDataColumns::class);
 
