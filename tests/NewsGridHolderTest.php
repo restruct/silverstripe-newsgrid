@@ -15,6 +15,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeAddNewButton;
 use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
 use SilverStripe\i18n\i18n;
 
@@ -224,6 +225,31 @@ class NewsGridHolderTest extends SapphireTest
         $this->assertStringContainsString('Draft item', $html);
         $this->assertStringContainsString('font-icon-check-mark-circle', $html);
         $this->assertStringContainsString('font-icon-pencil', $html);
+    }
+
+    public function testAddNewButtonOffersANewsItemToALoggedInEditor()
+    {
+        // The button only renders for someone who may create a child page; testGridRendersWith...
+        // above runs anonymously and so never reaches it. On Silverstripe 6 this is also the check on
+        // the add-new workaround in getCMSFields(): admintweaks' own button fatals there.
+        $this->logInWithPermission('ADMIN');
+        $holder = $this->makeHolder();
+
+        $controller = $this->pushCmsController($holder);
+        try {
+            $fields = $holder->getCMSFields();
+            \SilverStripe\Forms\Form::create($controller, 'EditForm', $fields, FieldList::create());
+            $gridField = $fields->dataFieldByName('ChildPages');
+            $button = $gridField->getConfig()->getComponentByType(GridFieldSiteTreeAddNewButton::class);
+            $this->assertNotNull($button, 'The grid should have an add-new button');
+            $allowed = $button->getAllowedChildren($holder);
+            $html = (string) $gridField->FieldHolder();
+        } finally {
+            $controller->popCurrent();
+        }
+
+        $this->assertSame([NewsGridPage::class], array_keys($allowed));
+        $this->assertStringContainsString('Add new', $html);
     }
 
     // ---------------------------------------------------------------- CMS site tree
