@@ -46,8 +46,15 @@ stay on the `2.0.x` tags.
   of merging into the default summary fields; the filterablearchive includes in the templates
   render only when that module is installed.
 - `restruct/silverstripe-blockbase` is listed under `suggest`.
-- Adds a behavioural test suite (`tests/`), run in CI on Silverstripe 5 (PHP 8.1, 8.3) and
-  Silverstripe 6 (PHP 8.3, 8.4) against MariaDB 11.4, plus a real `dev/build` / `db:build`.
+- Adds a behavioural test suite (`tests/`). It has been run locally on Silverstripe 5.4 and 6.2
+  (PHP 8.3). A CI workflow is added for Silverstripe 5 (PHP 8.1, 8.3) and Silverstripe 6 (PHP 8.3,
+  8.4) against MariaDB 11.4, plus a real `dev/build` / `db:build`; **it has not run yet**.
+- `Extensions\CustomLumberjack` (not applied by default: `_config/config.yml` leaves it commented
+  out) hides news items from the CMS in more places since 3.0.0. `shouldFilter()` now filters on any
+  `CMSMain` controller for the `index`, `show`, `treeview` and `getsubtree` actions; 2.0.x filtered
+  only on `CMSPagesController` for `treeview` and `getsubtree` (Silverstripe 6 has no
+  `CMSPagesController`). `listview` is still not filtered. If your project applies the extension,
+  check that the CMS still shows news items where you expect them.
 - Adds `.gitattributes`: dist installs no longer ship `tests/` or `.github/`.
 - Adds the `funding` property to `composer.json`.
 
