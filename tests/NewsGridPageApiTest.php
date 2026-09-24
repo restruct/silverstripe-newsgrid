@@ -42,7 +42,7 @@ class NewsGridPageApiTest extends SapphireTest
 
     public function testFormattedPublishDateUsesTheCldrPattern()
     {
-        // Pins the output as documented in the README: 'd M Y' is a CLDR pattern (day, month number,
+        // Before 3.1.0: pins the output as documented in the README: 'd M Y' is a CLDR pattern (day, month number,
         // week-year), not PHP date(). Whether to change it to 'd MMM y' is an open release decision;
         // if it changes, this expectation changes with it.
         // Decided for 3.1.0: changed to 'd MMM y', so the expectation is now '2 Jan 2026' (was '2 1 2026').

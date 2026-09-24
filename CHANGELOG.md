@@ -1,18 +1,20 @@
 # Changelog
 
-## 3.1.0 (unreleased)
+## 3.1.0 (2026-09-25)
 
-Silverstripe 5 and 6 from one line (`main`, renamed from `master`). Silverstripe 4 is not supported; projects on it can
-stay on the `2.0.x` tags.
+Silverstripe 5 and 6 from one line (`main`, renamed from `master`). Silverstripe 4 is not
+supported; projects on it can stay on the `2.0.x` tags.
 
 ### Upgrading
 
 - **From 2.0.x (Silverstripe 5):** change your constraint to `^3.1`. Nothing to migrate in the
   database. What you will notice is listed under "Changed" below.
-- **From 3.0.x (Silverstripe 6):** a `^3` constraint picks this up. The news items grid moves back to
-  the Main tab (fixed issue #1, below).
+- **From 3.0.x (Silverstripe 6):** a `^3` constraint picks this up. The news items grid moves back
+  to the Main tab (fixed issue #1, below).
 - **Both:** `formattedPublishDate()` now renders `2 Jan 2026` instead of `2 1 2026` (see "Fixed").
-  If a template or project code relies on the old numeric output, format `$Date` itself instead.
+  The month name follows the site locale (`nl_NL` gives `2 jan 2026`, `de_DE` `2 Jan. 2026`), so
+  the width of the output varies by language. If a template or project code relies on the old
+  numeric output, format `$Date` itself instead.
 
 ### Fixed
 
@@ -39,7 +41,8 @@ stay on the `2.0.x` tags.
 - **`NewsGridPage::formattedPublishDate()` shows a readable date.** Its CLDR pattern `d M Y`
   rendered `2 1 2026`: `M` is the month number and `Y` the week-year, so dates around 1 January
   could even show the wrong year (30 December 2024 printed as 2025). It is now `d MMM y`, e.g.
-  `2 Jan 2026`. This output dates back to the Silverstripe 4 port.
+  `2 Jan 2026` in English; the month name follows the site locale. This output dates back to the
+  Silverstripe 4 port.
 - **The SS3 class name remapping runs on Silverstripe 6.** It moved from `DatabaseAdmin` to
   `DbBuild`; `_config/upgrade.yml` now sets it on whichever class exists.
 
@@ -80,4 +83,5 @@ Silverstripe 6 only (`^6`). Superseded by 3.1.0, which also carries the fixes ab
 
 ## 2.0.x
 
-Silverstripe 4 and 5 (`^4 || ^5`). 2.0.10 and 2.0.11 were tagged from the `ss345` branch, renamed `v2` at the 3.1.0 release.
+Silverstripe 4 and 5 (`^4 || ^5`). 2.0.10 and 2.0.11 were tagged from the `ss345` branch, renamed
+`v2` at the 3.1.0 release.
