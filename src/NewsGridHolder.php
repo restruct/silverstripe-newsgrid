@@ -23,8 +23,10 @@ class NewsGridHolder extends Page
 
     private static $class_description = 'Create a page to contain your news items/archive';
 
-    # Silverstripe 5 names for $class_description (above) and $cms_icon (below): SS5 before 5.4 reads only
-    # $description, and every SS5 release reads only $icon ($cms_icon is SS6). SS6 reads neither, so both
+    # Silverstripe 5 names for $class_description (above) and $cms_icon (below). SS 5.4 reads
+    # $class_description and falls back to the deprecated $description only when that is empty, so on 5.4
+    # $description is unused; it is kept for older SS5 releases that ^5 still allows (not tested here).
+    # SS5 (5.4 checked) takes the icon only from $icon ($cms_icon is SS6). SS6 reads neither, so both
     # pairs are declared to keep the page type described and iconed on both majors. Drop these when SS5
     # leaves the range.
     private static $description = 'Create a page to contain your news items/archive';

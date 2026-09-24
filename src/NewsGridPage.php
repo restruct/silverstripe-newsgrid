@@ -17,8 +17,10 @@ class NewsGridPage extends Page
 
     private static $class_description = 'Create a news item';
 
-    # Silverstripe 5 names for $class_description and $cms_icon: SS5 before 5.4 reads only $description,
-    # and every SS5 release reads only $icon. SS6 reads neither. Drop these when SS5 leaves the range.
+    # Silverstripe 5 names for $class_description and $cms_icon. SS 5.4 reads $class_description and falls
+    # back to the deprecated $description only when that is empty, so on 5.4 $description is unused; it
+    # is kept for older SS5 releases that ^5 still allows (not tested here). SS5 (5.4 checked) takes the
+    # icon only from $icon; $cms_icon is the SS6 name. SS6 reads neither. Drop these when SS5 leaves the range.
     private static $description = 'Create a news item';
 
     private static $icon = 'restruct/silverstripe-newsgrid:client/images/newsholder.png';
