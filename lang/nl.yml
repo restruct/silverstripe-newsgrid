@@ -5,6 +5,7 @@ nl:
     NoAutoInsertImage: 'Voeg de afbeelding NIET automatisch toe in de inhoud van het bericht'
     Related: Gerelateerd
   Restruct\SilverStripe\NewsGrid\NewsGridHolder:
+    CLASS_DESCRIPTION: 'Maak een pagina aan voor uw nieuwsberichten/archief'
     DESCRIPTION: 'Maak een pagina aan voor uw nieuwsberichten/archief'
     PLURALNAME: 'Nieuws secties'
     PLURALS:
@@ -12,6 +13,7 @@ nl:
       other: '{count} nieuws secties'
     SINGULARNAME: 'Nieuws sectie'
   Restruct\SilverStripe\NewsGrid\NewsGridPage:
+    CLASS_DESCRIPTION: 'Maak een nieuwsitem'
     DESCRIPTION: 'Maak een nieuwsitem'
     PLURALNAME: Nieuwsberichten
     PLURALS:
