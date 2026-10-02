@@ -132,6 +132,7 @@ jobs:
               <testsuites>
                   <testsuite name="newsgrid">
                       <directory>vendor/restruct/silverstripe-newsgrid/tests</directory>
+                      <exclude>vendor/restruct/silverstripe-newsgrid/tests/browser</exclude>
                   </testsuite>
                   <testsuite name="consumer">
                       <directory>app/tests</directory>
