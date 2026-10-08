@@ -5,6 +5,14 @@
 # Ports are assigned in ~/Sites/0_ss-mods-maintenance/tools/browser/PORTS.md; take new ones there.
 
 BROWSER_PACKAGE="restruct/silverstripe-newsgrid"
+
+# The specs run without the optional integrations (as CI does). To also run them WITH
+# filterablearchive, pass the hook on the command line (env wins, nothing below sets it); the specs
+# read which integrations the host has from the fixture's reseed answer. A separate
+# BROWSER_HOSTS_DIR keeps the plain hosts as they are:
+#   SS5_EXTRA_REQUIRE="restruct/silverstripe-filterablearchive:^3.1" \
+#   SS6_EXTRA_REQUIRE="restruct/silverstripe-filterablearchive:^3.1" \
+#   BROWSER_HOSTS_DIR=~/Library/Caches/ssmods-browser-hosts-integrations tools/browser/run.sh silverstripe-newsgrid
 BROWSER_TARGETS="ss5 ss6"
 
 # This branch (main, 3.1.x) requires framework ^5 || ^6, so it serves BOTH majors (empty ref = the

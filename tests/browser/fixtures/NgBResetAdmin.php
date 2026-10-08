@@ -14,7 +14,8 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
 
 /**
  * BROWSER-TEST FIXTURE ONLY - lets a spec start from a known News section:
- * GET /admin/ng-reset/reseed?title=... answers {"id": section ID, "link": its URL, "items": {title: ID}}.
+ * GET /admin/ng-reset/reseed?title=... answers {"id": section ID, "link": its URL, "items": {title: ID},
+ * "integrations": {"filterablearchive": bool}}.
  *
  * And renders a page's front-end layout: GET /admin/ng-reset/layout?id=... The scratch host has no
  * theme, so there is no main Page.ss and the page's own URL cannot render; this renders the
@@ -118,7 +119,13 @@ class NgBResetAdmin extends LeftAndMain
             $ids[$itemTitle] = $item->ID;
         }
 
-        return HTTPResponse::create(json_encode(['id' => $holder->ID, 'link' => $holder->Link(), 'items' => $ids]))
+        # Which optional integrations the host has, so a spec can expect what they add: the specs also
+        # run on a host WITH filterablearchive (SS<n>_EXTRA_REQUIRE, see targets.sh).
+        $integrations = [
+            'filterablearchive' => class_exists('Restruct\\SilverStripe\\FilterableArchive\\Extensions\\HolderExtension'),
+        ];
+
+        return HTTPResponse::create(json_encode(['id' => $holder->ID, 'link' => $holder->Link(), 'items' => $ids, 'integrations' => $integrations]))
             ->addHeader('Content-Type', 'application/json');
     }
 }

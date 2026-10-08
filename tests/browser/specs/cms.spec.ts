@@ -13,15 +13,16 @@ test('a News section lists its news items, newest first, in a grid on the Main t
     await expect(page.locator('#tab-Root_ChildPages, [aria-controls="Root_ChildPages"]')).toHaveCount(0);
 
     // Newest first (default_sort Date DESC); Title and the simplified state column only: no Date
-    // column without managed_object_date_field (set by filterablearchive).
+    // column without managed_object_date_field (set by filterablearchive, which adds a Date column).
     const grid = newsGrid(page);
     expect(await gridRows(grid)).toEqual([
         ['Draft item', 'Draft'],
         ['Modified item', 'Published, Modified'],
         ['Published item', 'Published'],
     ]);
-    await expect(grid.locator('tbody tr.ss-gridfield-item').first().locator('td')).toHaveCount(3);
-    await expect(grid.locator('td.col-Date')).toHaveCount(0);
+    const withFilterable = section.integrations.filterablearchive;
+    await expect(grid.locator('tbody tr.ss-gridfield-item').first().locator('td')).toHaveCount(withFilterable ? 4 : 3);
+    await expect(grid.locator('td.col-Date')).toHaveCount(withFilterable ? 3 : 0);
 
     // GridFieldSimpleSiteTreeState: an icon and the state, no dates; "Modified" as its own label.
     const modified = grid.locator('tbody tr.ss-gridfield-item', { hasText: 'Modified item' }).locator('td.gridfield-icon');

@@ -6,8 +6,9 @@ import { test as base, expect, type Locator, type Page, type Request } from '@pl
 // section of its own, published, holding three news items in the three states its grid shows:
 //   "Draft item" (2026-01-05, never published), "Modified item" (2026-01-02, published, then
 //   changed on draft), "Published item" (2025-12-30, published).
-// filterablearchive is not installed on the test host (it is an optional integration), so these
-// specs cover the module on its own.
+// filterablearchive is an optional integration: the specs run on hosts without it (the default) and
+// can be run on hosts with it (SS<n>_EXTRA_REQUIRE, see targets.sh); a spec that depends on it reads
+// section.integrations.filterablearchive from the reseed answer.
 
 /**
  * test, extended with an automatic guard: every spec fails if the page logs a console error (a
@@ -43,7 +44,7 @@ export const test = base.extend<{ guard: void }>({
 
 export { expect };
 
-export type Section = { id: number; link: string; items: Record<string, number> };
+export type Section = { id: number; link: string; items: Record<string, number>; integrations: { filterablearchive: boolean } };
 
 export async function reseed(page: Page, title: string): Promise<Section> {
     const response = await page.request.get('/admin/ng-reset/reseed', { params: { title } });
