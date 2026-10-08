@@ -7,6 +7,11 @@
 - **`BlockNewsItems` is described in the block-type picker again** (issue #5). It declared
   `$description`, which elemental 5.4 and 6 (the versions blockbase 2 runs on) no longer read; it
   now declares `$class_description`.
+- **A `BlockNewsItems` block can be edited without filterablearchive.** Its category filter read
+  the News sections' `Categories` relation, which only filterablearchive adds, so with blockbase
+  installed and filterablearchive not, opening the block threw `the method 'Categories' does not
+  exist`. The filter is now offered only when filterablearchive is installed. Found while running
+  the suite with blockbase 2 installed (issue #6).
 
 ### Changed
 

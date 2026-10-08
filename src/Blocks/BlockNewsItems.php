@@ -50,13 +50,17 @@ class BlockNewsItems extends BlockContent
         // Optionally limit items by a specific Category
         // Would be nice to allow multiple but ListboxField is STILL not working as react component so cannot
         // be used inline in a block and StringTagField STILL causes error
-        $availableCats = NewsGridHolder::get()->relation('Categories');
-        $categoriesField = DropdownField::create(
-            'ExtraData_LimitByCatID',
-            "Filter by category",
-            $availableCats
-        )->setEmptyString('ANY/ALL');
-        $fields->addFieldToTab("Root.Main", $categoriesField, 'IntroLine');
+        # The Categories relation comes from filterablearchive's HolderExtension (optional): without it,
+        # relation('Categories') throws and the block cannot be edited at all. No categories, no filter.
+        if (NewsGridHolder::singleton()->hasMethod('Categories')) {
+            $availableCats = NewsGridHolder::get()->relation('Categories');
+            $categoriesField = DropdownField::create(
+                'ExtraData_LimitByCatID',
+                "Filter by category",
+                $availableCats
+            )->setEmptyString('ANY/ALL');
+            $fields->addFieldToTab("Root.Main", $categoriesField, 'IntroLine');
+        }
 
         $fields->replaceField('IntroLine',
             TextField::create('IntroLine', 'Label for ‘All news’ button/link')
