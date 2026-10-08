@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.0 (unreleased)
+
+### Fixed
+
+- **`BlockNewsItems` is described in the block-type picker again** (issue #5). It declared
+  `$description`, which elemental 5.4 and 6 (the versions blockbase 2 runs on) no longer read; it
+  now declares `$class_description`.
+
 ## 3.1.0 (2026-09-25)
 
 Silverstripe 5 and 6 from one line (`main`, renamed from `master`). Silverstripe 4 is not

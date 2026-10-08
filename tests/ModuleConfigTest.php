@@ -47,4 +47,19 @@ class ModuleConfigTest extends SapphireTest
         }
         $this->assertFalse(class_exists('Restruct\SilverStripe\NewsGrid\BlockNewsItems'));
     }
+
+    /**
+     * Issue #5: elemental 5.4 and 6 (the only versions blockbase 2 runs on) read a block type's
+     * description from class_description, uninherited, so the old $description left the type
+     * undescribed in the block-type picker. Runs only where blockbase is installed.
+     */
+    public function testBlockTypeDescriptionIsReadByElemental()
+    {
+        if (!ClassInfo::exists('Restruct\Silverstripe\BlockBase\Blocks\BlockContent')) {
+            $this->markTestSkipped('blockbase is not installed');
+        }
+        $block = singleton('Restruct\SilverStripe\NewsGrid\BlockNewsItems');
+
+        $this->assertSame('Recent Newsitems', $block->i18n_classDescription());
+    }
 }

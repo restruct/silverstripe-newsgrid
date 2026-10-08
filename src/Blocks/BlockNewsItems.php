@@ -24,7 +24,11 @@ class BlockNewsItems extends BlockContent
 
     private static $icon = 'font-icon-globe';
 
-    private static $description = 'Recent Newsitems';
+    # 'description' was renamed 'class_description' (issue #5): elemental 5.4 reads only the new name, and
+    # uninherited, so the old one left this block type undescribed (blockbase 2, the only release this
+    # block can run on, requires elemental ^5.4 || ^6, so nothing reads the old name any more).
+//    private static $description = 'Recent Newsitems';
+    private static $class_description = 'Recent Newsitems';
 
     private static $has_heading = true;
 
