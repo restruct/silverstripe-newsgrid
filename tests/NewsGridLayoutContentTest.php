@@ -83,6 +83,23 @@ class NewsGridLayoutContentTest extends SapphireTest
         $this->assertSame(2, substr_count($html, '<li>'));
     }
 
+    public function testNewsSectionLayoutListsOnlyItsOwnItems()
+    {
+        [$holder] = $this->makeSection();
+        $other = NewsGridHolder::create(['Title' => 'Other news', 'URLSegment' => 'other-news']);
+        $other->write();
+        $other->publishSingle();
+        $foreign = NewsGridPage::create(['Title' => 'Other section item', 'ParentID' => $other->ID, 'Date' => '2026-01-03']);
+        $foreign->write();
+        $foreign->publishSingle();
+
+        $html = $this->renderLive(NewsGridHolderController::class, $holder->ID, NewsGridHolder::class);
+
+        $this->assertStringNotContainsString('Other section item', $html);
+        preg_match_all('#<h4 class="mb-0">(.*?)</h4>#s', $html, $titles);
+        $this->assertSame(['Newer item', 'Older item'], array_map('trim', $titles[1]));
+    }
+
     public function testNewsItemLayoutLinksBackToItsNewsSection()
     {
         [$holder, $items] = $this->makeSection();
