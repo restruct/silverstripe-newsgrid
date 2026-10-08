@@ -93,9 +93,25 @@ class NewsGridPage extends Page
         # its date archive is active, so on SS5 there was often none. Use whichever Date field is there
         # (filterablearchive's keeps its own form field), else add one, and place it directly before
         # Content (where filterablearchive puts it), so every combination shows it in the same place.
-        $dateField = $fields->dataFieldByName('Date') ?: DateField::create('Date', $this->fieldLabel('Date'));
-        $fields->removeByName('Date');
-        $fields->insertBefore('Content', $dateField);
+//        $dateField = $fields->dataFieldByName('Date') ?: DateField::create('Date', $this->fieldLabel('Date'));
+//        $fields->removeByName('Date');
+//        $fields->insertBefore('Content', $dateField);
+        # But a project extension (run inside parent::getCMSFields(), so before this) may have put the
+        # Date somewhere else on purpose: only a field on Root.Main is moved. And without Content,
+        # insertBefore() would append the field to the top level, outside the Root tabset.
+        $hasContent = (bool) $fields->fieldByName('Root.Main.Content');
+        $existing = $fields->dataFieldByName('Date');
+        if (!$existing) {
+            $dateField = DateField::create('Date', $this->fieldLabel('Date'));
+            if ($hasContent) {
+                $fields->insertBefore('Content', $dateField);
+            } else {
+                $fields->addFieldToTab('Root.Main', $dateField);
+            }
+        } elseif ($hasContent && $fields->fieldByName('Root.Main.Date')) {
+            $fields->removeByName('Date');
+            $fields->insertBefore('Content', $existing);
+        }
 
         // Reorder some fields
         if($schedulerField = $fields->fieldByName('Root.Main.SoftScheduler')) {

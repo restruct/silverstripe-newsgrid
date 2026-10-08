@@ -26,7 +26,9 @@
   archive is active, so the date usually stayed the day the item was created. The edit form now
   always has one Date field, directly before Content, on both majors and with or without
   filterablearchive (whose own field is kept, not duplicated). On Silverstripe 6 this moves the
-  scaffolded field from after Content to before it.
+  scaffolded field from after Content to before it. A Date field your project's extension placed
+  elsewhere (another tab) is left where it is, and without a Content field the Date goes on the
+  Main tab.
 
 ### Added
 
