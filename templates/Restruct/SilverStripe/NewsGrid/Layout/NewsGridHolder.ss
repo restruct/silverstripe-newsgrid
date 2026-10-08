@@ -39,6 +39,9 @@
 
             <% if $hasMethod('FilterDropdown') %>
                 <% include FilterableArchiveBootstrapPagination %>
+            <% else %>
+                <%-- Without filterablearchive: the module's own page links, same markup (PaginatedItemsFallback) --%>
+                <% include NewsGridPagination %>
             <% end_if %>
 
         </div>

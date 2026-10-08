@@ -52,13 +52,13 @@ class NewsGridLayoutContentTest extends SapphireTest
         return [$holder, $items];
     }
 
-    private function renderLive(string $controllerClass, int $pageID, string $pageClass): string
+    private function renderLive(string $controllerClass, int $pageID, string $pageClass, array $getVars = []): string
     {
-        return Versioned::withVersionedMode(function () use ($controllerClass, $pageID, $pageClass) {
+        return Versioned::withVersionedMode(function () use ($controllerClass, $pageID, $pageClass, $getVars) {
             Versioned::set_stage(Versioned::LIVE);
             $page = $pageClass::get()->byID($pageID);
             $controller = $controllerClass::create($page);
-            $request = new HTTPRequest('GET', '/');
+            $request = new HTTPRequest('GET', '/', $getVars);
             $request->setSession(new Session([]));
             $controller->setRequest($request);
             // Current, as during a real request (anything reading Controller::curr() sees this page)
@@ -103,5 +103,52 @@ class NewsGridLayoutContentTest extends SapphireTest
         $withFilterable = ClassInfo::exists('Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension');
 
         $this->assertSame(!$withFilterable, NewsGridHolderController::has_extension(PaginatedItemsFallback::class));
+    }
+
+    /**
+     * Without filterablearchive the fallback list is paginated by NewsGridHolder.items_per_page, and
+     * the section template renders the page links (a large archive must not render every item).
+     */
+    public function testWithoutFilterablearchiveTheListIsPaginatedWithPageLinks()
+    {
+        if (ClassInfo::exists('Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension')) {
+            $this->markTestSkipped('filterablearchive paginates by its own per-section ItemsPerPage');
+        }
+        NewsGridHolder::config()->set('items_per_page', 1);
+        [$holder] = $this->makeSection();
+        $titles = function (string $html): array {
+            preg_match_all('#<h4 class="mb-0">(.*?)</h4>#s', $html, $m);
+            return array_map('trim', $m[1]);
+        };
+
+        $page1 = $this->renderLive(NewsGridHolderController::class, $holder->ID, NewsGridHolder::class);
+        $this->assertSame(['Newer item'], $titles($page1));
+        $this->assertStringContainsString('<nav class="pagination_container">', $page1);
+        // Page 2 is linked (?start=1), page 1 is the active one
+        $this->assertMatchesRegularExpression('#<a class="page-link" href="[^"]*start=1" title="View page number 2">2</a>#', $page1);
+        $this->assertMatchesRegularExpression('#<li class="page-item active">\s*<a class="page-link" href="[^"]*" title="View page number 1">1</a>#', $page1);
+
+        $page2 = $this->renderLive(NewsGridHolderController::class, $holder->ID, NewsGridHolder::class, ['start' => 1]);
+        $this->assertSame(['Older item'], $titles($page2));
+        $this->assertMatchesRegularExpression('#<li class="page-item active">\s*<a class="page-link" href="[^"]*start=1" title="View page number 2">2</a>#', $page2);
+    }
+
+    public function testWithoutFilterablearchiveAPageLengthOfZeroListsEverythingWithoutPageLinks()
+    {
+        if (ClassInfo::exists('Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension')) {
+            $this->markTestSkipped('filterablearchive paginates by its own per-section ItemsPerPage');
+        }
+        NewsGridHolder::config()->set('items_per_page', 0);
+        [$holder] = $this->makeSection();
+
+        $html = $this->renderLive(NewsGridHolderController::class, $holder->ID, NewsGridHolder::class);
+
+        $this->assertSame(2, substr_count($html, '<h4 class="mb-0">'));
+        $this->assertStringNotContainsString('pagination_container', $html);
+    }
+
+    public function testItemsPerPageDefaultsToTwelve()
+    {
+        $this->assertSame(12, NewsGridHolder::config()->get('items_per_page'));
     }
 }

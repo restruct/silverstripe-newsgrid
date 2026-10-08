@@ -17,8 +17,8 @@
   which only filterablearchive provided, so the page listed no items (Silverstripe 5 rendered one
   empty entry); and the item's link back read `$HolderPage`, also filterablearchive's, so it had no
   URL and no text. Without filterablearchive, the new `Extensions\PaginatedItemsFallback` now gives
-  `NewsGridHolderController` a `PaginatedItems()` (the section's items, newest first, all on one
-  page); it is applied only when filterablearchive is absent, so its own filtered and paginated list
+  `NewsGridHolderController` a `PaginatedItems()` (the section's items, newest first, 12 per page
+  by default, with page links); it is applied only when filterablearchive is absent, so its own filtered and paginated list
   is unchanged. The link back reads `$Parent`, which is the News section with or without
   filterablearchive.
 - **A news item's Date can be edited on Silverstripe 5** (issue #8). Silverstripe 5 does not
@@ -33,6 +33,9 @@
 - `Extensions\PaginatedItemsFallback` (see issue #7 above): `PaginatedItems()` on
   `NewsGridHolderController` when filterablearchive is not installed. If your project's own
   section template loops over `$PaginatedItems`, it now lists items without filterablearchive too.
+- Config `NewsGridHolder.items_per_page` (default `12`, `0` = no pagination): page length of that
+  list. Without filterablearchive the section template renders page links from the new
+  `Includes/NewsGridPagination.ss`, in the same markup as filterablearchive's Bootstrap pagination.
 
 ### Changed
 

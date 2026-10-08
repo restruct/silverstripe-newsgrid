@@ -9,6 +9,7 @@ use SilverStripe\CMS\Controllers\ModelAsController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 
@@ -17,7 +18,7 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  * GET /admin/ng-reset/reseed?title=... answers {"id": section ID, "link": its URL, "items": {title: ID},
  * "integrations": {"filterablearchive": bool}}.
  *
- * And renders a page's front-end layout: GET /admin/ng-reset/layout?id=... The scratch host has no
+ * And renders a page's front-end layout: GET /admin/ng-reset/layout?id=...[&per_page=N] The scratch host has no
  * theme, so there is no main Page.ss and the page's own URL cannot render; this renders the
  * module's Layout template for the page type (templates/Restruct/SilverStripe/NewsGrid/Layout/)
  * in the scope of the page's own controller, on the Live stage, inside a bare HTML document.
@@ -46,6 +47,10 @@ class NgBResetAdmin extends LeftAndMain
         # admin also makes draft the DEFAULT reading mode, and links rendered off the default get
         # "?stage=Live" appended, which a visitor's links never carry; so Live is made the default
         # for the render too, and restored after it.
+        # ?per_page=N: NewsGridHolder.items_per_page for this render only (pagination spec)
+        if ($request->getVar('per_page') !== null) {
+            Config::modify()->set(NewsGridHolder::class, 'items_per_page', (int) $request->getVar('per_page'));
+        }
         $defaultMode = Versioned::get_default_reading_mode();
         [$page, $layout] = Versioned::withVersionedMode(function () use ($request, $defaultMode) {
             Versioned::set_default_reading_mode(Versioned::DEFAULT_MODE);

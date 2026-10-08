@@ -37,3 +37,21 @@ test('a news item page links back to its News section (https://github.com/restru
     await expect(up).toHaveAttribute('href', section.link);
     await expect(up).toContainText('Layout uplink');
 });
+
+// Without filterablearchive the section list is paginated by NewsGridHolder.items_per_page (default
+// 12; the fixture's per_page overrides it for one render) and the module renders the page links.
+// filterablearchive paginates by its own per-section setting, so this spec is for the module alone.
+test('without filterablearchive the News section page is paginated; its page 2 link shows the next items', async ({ page }) => {
+    const section = await reseed(page, 'Layout pages');
+    test.skip(section.integrations.filterablearchive, 'filterablearchive paginates by its own ItemsPerPage');
+    await page.goto(`/admin/ng-reset/layout?id=${section.id}&per_page=1`);
+    const layout = page.locator('main.layout');
+    await expect(layout.locator('ul.list-unstyled > li h4')).toHaveText(['Modified item']);
+    const pager = layout.locator('nav.pagination_container');
+    await expect(pager.locator('li.page-item.active')).toHaveText('1');
+
+    await pager.getByRole('link', { name: '2', exact: true }).click();
+    await expect(page).toHaveURL(/[?&]start=1(&|$)/);
+    await expect(layout.locator('ul.list-unstyled > li h4')).toHaveText(['Published item']);
+    await expect(pager.locator('li.page-item.active')).toHaveText('2');
+});

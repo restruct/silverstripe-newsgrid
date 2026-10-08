@@ -77,6 +77,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 | `hide_from_cms_tree` | `NewsGridHolder` | `[NewsGridPage]` | Page classes left out of the CMS site tree under a News section. |
 | `default_sort` | `NewsGridPage` | `Date DESC` | News items are listed newest first. |
 | `apply_sortable` | `NewsGridHolder` | `false` | **No effect with this module alone.** Only `micschk/silverstripe-gridfieldpages` reads it (its `GridFieldPageHolderExtension`, Silverstripe 4 only), which `_config/config.yml` leaves commented out. With that extension applied, `true` adds drag-and-drop ordering to its pages grid. |
+| `items_per_page` | `NewsGridHolder` | `12` | News items per page on the News section page **without** filterablearchive (where it is installed, its per-section "items per page" setting applies instead). `0` lists every item on one page. The page links render from `templates/Includes/NewsGridPagination.ss` (same markup as filterablearchive's Bootstrap pagination). |
 
 The CMS stylesheet `client/css/newsgridpages.css` is added to every admin screen through
 `LeftAndMain.extra_requirements_css`.
@@ -105,7 +106,7 @@ Each of these is picked up automatically when the package is installed, and igno
 | `getLumberjackPagesForGridfield()` | `NewsGridHolder` | The News section's own news items as `NewsGridPage` records, so the grid can sort on `Date`. |
 | `getLumberjackTitle()` | `NewsGridHolder` | The grid's title (translatable, `NEWSGRID.NewsItems`). |
 | `formattedPublishDate()` | `NewsGridPage` | The item's `Date` through `Format('d MMM y')` (a CLDR pattern, not a PHP `date()` one): day, abbreviated month name and calendar year, e.g. `2 Jan 2026`. The month name follows the site locale (`nl_NL`: `2 jan 2026`). Before 3.1.0 it used `d M Y`, which rendered `2 1 2026` (month number, week-year). |
-| `PaginatedItems()` | `NewsGridHolderController` | The News section's news items for its page, newest first, in the current reading mode. Provided by filterablearchive (filtered and paginated) when installed; otherwise by this module's `Extensions\PaginatedItemsFallback`, applied only then, as one page holding every item (there is no pagination control without filterablearchive). |
+| `PaginatedItems()` | `NewsGridHolderController` | The News section's news items for its page, newest first, in the current reading mode. Provided by filterablearchive (filtered and paginated) when installed; otherwise by this module's `Extensions\PaginatedItemsFallback`, applied only then, paginated by `items_per_page` over the request's `?start=`. |
 | `DateFieldComment()` | `NewsGridPage` | `(x minutes ago)` for items dated within the last hour; requires filterablearchive. |
 | `RecentNewsItems($limit = 3)` | `BlockNewsItems` | The most recent news items, optionally filtered by category. |
 | `NewsSectionLink()` | `BlockNewsItems` | The first News section, labelled for the "all news" link, or `null` when no label is set or no News section exists. |
@@ -136,7 +137,8 @@ Some checks skip themselves on purpose, so the test count depends on what the ho
   includes rendering when filterablearchive is present, is covered by `NewsGridTemplateGuardTest`
   with a stand-in, which runs either way.
 - `NewsGridPageDateFieldTest::testFilterablearchivesOwnDateFieldIsNotDuplicated` is skipped when
-  filterablearchive is not installed.
+  filterablearchive is not installed; the two `NewsGridLayoutContentTest` pagination tests
+  (`items_per_page`) when it is.
 - `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed;
   `ModuleConfigTest::testBlockTypeDescriptionIsReadByElemental` and `BlockNewsItemsCmsFieldsTest`
   when it is not.

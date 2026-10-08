@@ -2,6 +2,7 @@
 
 namespace Restruct\SilverStripe\NewsGrid\Extensions;
 
+use Restruct\SilverStripe\NewsGrid\NewsGridHolder;
 use Restruct\SilverStripe\NewsGrid\NewsGridPage;
 use SilverStripe\Core\Extension;
 
@@ -19,8 +20,10 @@ use SilverStripe\Core\Extension;
  * is the one in use, and this one is never added.
  *
  * Same list as filterablearchive's unfiltered one: the section's own news items, newest first, in
- * the current reading mode (so Live for visitors, draft in a CMS preview). There is no pagination
- * control without filterablearchive, so every item is on the one page.
+ * the current reading mode (so Live for visitors, draft in a CMS preview), paginated over the
+ * request's ?start= by NewsGridHolder.items_per_page (default 12; 0 = every item on one page, as
+ * filterablearchive's ItemsPerPage of 0). The section template renders the page links
+ * (Includes/NewsGridPagination.ss) when there is more than one page.
  */
 class PaginatedItemsFallback extends Extension
 {
@@ -37,8 +40,11 @@ class PaginatedItemsFallback extends Extension
             ? 'SilverStripe\\Model\\List\\PaginatedList'
             : 'SilverStripe\\ORM\\PaginatedList';
         $list = $listClass::create($items, $this->getOwner()->getRequest());
-        # One page holding everything (a page length of 0 would break the page count)
-        $list->setPageLength(max(1, $items->count()));
+        # A large archive must not render hundreds of items on one page, so paginate by config
+        $perPage = (int) NewsGridHolder::config()->get('items_per_page');
+        # 0 (or less) = no pagination: one page holding everything (a page length of 0 would break
+        # the page count, hence at least 1)
+        $list->setPageLength($perPage > 0 ? $perPage : max(1, $items->count()));
 
         return $list;
     }
