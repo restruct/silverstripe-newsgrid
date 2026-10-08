@@ -9,6 +9,7 @@ use Restruct\SilverStripe\NewsGrid\NewsGridPageController;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use Restruct\SilverStripe\NewsGrid\Extensions\PaginatedItemsFallback;
+use Restruct\SilverStripe\NewsGrid\Tests\NewsGridLayoutContentTest\PagedHolder;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Versioned\Versioned;
@@ -31,12 +32,16 @@ class NewsGridLayoutContentTest extends SapphireTest
 {
     protected $usesDatabase = true;
 
+    protected static $extra_dataobjects = [
+        PagedHolder::class,
+    ];
+
     /**
      * A published section with two published items and one draft-only item, newest last.
      */
-    private function makeSection(): array
+    private function makeSection(string $holderClass = NewsGridHolder::class): array
     {
-        $holder = NewsGridHolder::create(['Title' => 'News', 'URLSegment' => 'news']);
+        $holder = $holderClass::create(['Title' => 'News', 'URLSegment' => 'news']);
         $holder->write();
         $holder->publishSingle();
         $items = [];
@@ -167,5 +172,22 @@ class NewsGridLayoutContentTest extends SapphireTest
     public function testItemsPerPageDefaultsToTwelve()
     {
         $this->assertSame(12, NewsGridHolder::config()->get('items_per_page'));
+    }
+
+    public function testWithoutFilterablearchiveASubclassesItemsPerPageIsUsed()
+    {
+        if (ClassInfo::exists('Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension')) {
+            $this->markTestSkipped('filterablearchive paginates by its own per-section ItemsPerPage');
+        }
+        // The base class keeps its default of 12; only the subclass says 1
+        [$holder] = $this->makeSection(PagedHolder::class);
+
+        # NewsGridHolder::get() returns the PagedHolder record; its Layout template is the base class's
+        $html = $this->renderLive(NewsGridHolderController::class, $holder->ID, NewsGridHolder::class);
+        $this->assertInstanceOf(PagedHolder::class, NewsGridHolder::get()->byID($holder->ID));
+
+        preg_match_all('#<h4 class="mb-0">(.*?)</h4>#s', $html, $titles);
+        $this->assertSame(['Newer item'], array_map('trim', $titles[1]));
+        $this->assertStringContainsString('<nav class="pagination_container">', $html);
     }
 }

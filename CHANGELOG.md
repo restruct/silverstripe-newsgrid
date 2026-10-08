@@ -36,7 +36,7 @@
   `NewsGridHolderController` when filterablearchive is not installed. If your project's own
   section template loops over `$PaginatedItems`, it now lists items without filterablearchive too.
 - Config `NewsGridHolder.items_per_page` (default `12`, `0` = no pagination): page length of that
-  list. Without filterablearchive the section template renders page links from the new
+  list, read from the section's own class (a `NewsGridHolder` subclass can set its own). Without filterablearchive the section template renders page links from the new
   `Includes/NewsGridPagination.ss`, in the same markup as filterablearchive's Bootstrap pagination.
 
 ### Changed
