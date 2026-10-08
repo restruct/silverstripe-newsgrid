@@ -77,6 +77,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 | `hide_from_cms_tree` | `NewsGridHolder` | `[NewsGridPage]` | Page classes left out of the CMS site tree under a News section. |
 | `default_sort` | `NewsGridPage` | `Date DESC` | News items are listed newest first. |
 | `apply_sortable` | `NewsGridHolder` | `false` | **No effect with this module alone.** Only `micschk/silverstripe-gridfieldpages` reads it (its `GridFieldPageHolderExtension`, Silverstripe 4 only), which `_config/config.yml` leaves commented out. With that extension applied, `true` adds drag-and-drop ordering to its pages grid. |
+| `items_per_page` | `NewsGridHolder` | `12` | News items per page on the News section page **without** filterablearchive (where it is installed, its per-section "items per page" setting applies instead). `0` lists every item on one page. The page links render from `templates/Includes/NewsGridPagination.ss` (same markup as filterablearchive's Bootstrap pagination). |
 
 The CMS stylesheet `client/css/newsgridpages.css` is added to every admin screen through
 `LeftAndMain.extra_requirements_css`.
@@ -95,9 +96,8 @@ Each of these is picked up automatically when the package is installed, and igno
 - **[restruct/silverstripe-blockbase](https://github.com/restruct/blockbase)**: declares the
   `BlockNewsItems` block, which shows the most recent news items (optionally limited to one
   filterablearchive category) with an optional link to the first News section. Without blockbase
-  the class is not declared at all. **Not usable yet on Silverstripe 5 or 6:** blockbase's
-  releases so far (up to 1.0.8, and `dev-main`) require Silverstripe 4, so this integration needs
-  a blockbase release that supports Silverstripe 5/6.
+  the class is not declared at all. Needs blockbase `^2` (Silverstripe 5 and 6, elemental `^5.4 || ^6`);
+  blockbase 1.x requires Silverstripe 4.
 
 ## Public API
 
@@ -106,6 +106,7 @@ Each of these is picked up automatically when the package is installed, and igno
 | `getLumberjackPagesForGridfield()` | `NewsGridHolder` | The News section's own news items as `NewsGridPage` records, so the grid can sort on `Date`. |
 | `getLumberjackTitle()` | `NewsGridHolder` | The grid's title (translatable, `NEWSGRID.NewsItems`). |
 | `formattedPublishDate()` | `NewsGridPage` | The item's `Date` through `Format('d MMM y')` (a CLDR pattern, not a PHP `date()` one): day, abbreviated month name and calendar year, e.g. `2 Jan 2026`. The month name follows the site locale (`nl_NL`: `2 jan 2026`). Before 3.1.0 it used `d M Y`, which rendered `2 1 2026` (month number, week-year). |
+| `PaginatedItems()` | `NewsGridHolderController` | The News section's news items for its page, newest first, in the current reading mode. Provided by filterablearchive (filtered and paginated) when installed; otherwise by this module's `Extensions\PaginatedItemsFallback`, applied only then, paginated by `items_per_page` over the request's `?start=`. A `PaginatedItems()` on the section record itself takes precedence over the fallback. A project template overriding `Layout/NewsGridHolder.ss` needs `<% include NewsGridPagination %>` for the page links. |
 | `DateFieldComment()` | `NewsGridPage` | `(x minutes ago)` for items dated within the last hour; requires filterablearchive. |
 | `RecentNewsItems($limit = 3)` | `BlockNewsItems` | The most recent news items, optionally filtered by category. |
 | `NewsSectionLink()` | `BlockNewsItems` | The first News section, labelled for the "all news" link, or `null` when no label is set or no News section exists. |
@@ -128,12 +129,21 @@ SS_PHPUNIT_FLUSH=1 vendor/bin/phpunit vendor/restruct/silverstripe-newsgrid/test
 
 `.github/workflows/ci.yml` builds exactly such a host project for each supported major.
 
-Two checks skip themselves on purpose, so the test count depends on what the host has installed:
+Some checks skip themselves on purpose, so the test count depends on what the host has installed:
 
 - `NewsGridTemplatesTest` (3 tests) is skipped when restruct/silverstripe-filterablearchive is
   installed. It checks that the templates render *without* that module (its includes are guarded
   so a missing template does not throw), which a host that has it cannot show. The other side, the
   includes rendering when filterablearchive is present, is covered by `NewsGridTemplateGuardTest`
   with a stand-in, which runs either way.
-- `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed.
-  blockbase currently requires Silverstripe 4, so on Silverstripe 5 and 6 it always runs.
+- `NewsGridPageDateFieldTest::testFilterablearchivesOwnDateFieldIsNotDuplicated` is skipped when
+  filterablearchive is not installed; the four `NewsGridLayoutContentTest` tests of the fallback
+  list (pagination, a subclass's `items_per_page`, a record's own `PaginatedItems()`) when it is.
+- `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed;
+  `ModuleConfigTest::testBlockTypeDescriptionIsReadByElemental` and `BlockNewsItemsCmsFieldsTest`
+  when it is not.
+
+`NewsGridLayoutContentTest` and `BlockNewsItemsCmsFieldsTest` expect different things with and
+without filterablearchive and both pass either way. To cover every side, run the suite on a host
+without the optional modules and on one with blockbase `^2` and filterablearchive `^3.1`; blockbase
+without filterablearchive is the combination that once broke `BlockNewsItems`' CMS fields.

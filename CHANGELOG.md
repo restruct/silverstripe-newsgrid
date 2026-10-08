@@ -1,5 +1,55 @@
 # Changelog
 
+## 3.2.0 (2026-10-08)
+
+### Fixed
+
+- **`BlockNewsItems` is described in the block-type picker again** (issue #5). It declared
+  `$description`, which elemental 5.4 and 6 (the versions blockbase 2 runs on) no longer read; it
+  now declares `$class_description`.
+- **A `BlockNewsItems` block can be edited without filterablearchive.** Its category filter read
+  the News sections' `Categories` relation, which only filterablearchive adds, so with blockbase
+  installed and filterablearchive not, opening the block threw `the method 'Categories' does not
+  exist`. The filter is now offered only when filterablearchive is installed. Found while running
+  the suite with blockbase 2 installed (issue #6).
+- **Without filterablearchive the News section page lists its news items, and an item's page links
+  back to its section** (issue #7). The section's Layout template loops over `$PaginatedItems`,
+  which only filterablearchive provided, so the page listed no items (Silverstripe 5 rendered one
+  empty entry); and the item's link back read `$HolderPage`, also filterablearchive's, so it had no
+  URL and no text. Without filterablearchive, the new `Extensions\PaginatedItemsFallback` now gives
+  `NewsGridHolderController` a `PaginatedItems()` (the section's items, newest first, 12 per page
+  by default, with page links); it is applied only when filterablearchive is absent, so its own filtered and paginated list
+  is unchanged. The link back reads `$Parent`, which is the News section with or without
+  filterablearchive.
+- **A news item's Date can be edited on Silverstripe 5** (issue #8). Silverstripe 5 does not
+  scaffold page fields from `$db`, and filterablearchive adds a Date field only while its date
+  archive is active, so the date usually stayed the day the item was created. The edit form now
+  always has one Date field, directly before Content, on both majors and with or without
+  filterablearchive (whose own field is kept, not duplicated). On Silverstripe 6 this moves the
+  scaffolded field from after Content to before it. A Date field your project's extension placed
+  elsewhere (another tab) is left where it is, and without a Content field the Date goes on the
+  Main tab.
+
+### Added
+
+- `Extensions\PaginatedItemsFallback` (see issue #7 above): `PaginatedItems()` on
+  `NewsGridHolderController` when filterablearchive is not installed. If your project's own
+  section template loops over `$PaginatedItems`, it now lists items without filterablearchive too.
+- Config `NewsGridHolder.items_per_page` (default `12`, `0` = no pagination): page length of that
+  list, read from the section's own class (a `NewsGridHolder` subclass can set its own). Without filterablearchive the section template renders page links from the new
+  `Includes/NewsGridPagination.ss`, in the same markup as filterablearchive's Bootstrap pagination.
+  If your News section record already has its own `PaginatedItems()` (for example a workaround for
+  issue #7), that one is still used.
+- **If your project overrides `Layout/NewsGridHolder.ss` and does not use filterablearchive:** the
+  list now shows the first `items_per_page` (12) items only, and your template has no page links
+  until you add `<% include NewsGridPagination %>` below the list (or set `items_per_page: 0`).
+
+### Changed
+
+- **`BlockNewsItems` is usable on Silverstripe 5 and 6 with blockbase 2.0.0** (issue #6). The
+  README and the `suggest` entry no longer say it waits for a blockbase release. The 3.1.0 entry
+  below is left as it was at release.
+
 ## 3.1.0 (2026-09-25)
 
 Silverstripe 5 and 6 from one line (`main`, renamed from `master`). Silverstripe 4 is not

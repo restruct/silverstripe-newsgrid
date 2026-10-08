@@ -41,6 +41,12 @@ class NewsGridHolder extends Page
 
     private static $has_one = [];
 
+    /**
+     * @config int News items per page on the News section page WITHOUT filterablearchive (its own
+     * per-section ItemsPerPage setting applies where it is installed). 0 = all items on one page.
+     */
+    private static $items_per_page = 12;
+
     public function getLumberjackTitle()
     {
         return _t('NEWSGRID.NewsItems', 'Nieuwsberichten');
