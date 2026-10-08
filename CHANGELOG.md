@@ -8,6 +8,12 @@
   `$description`, which elemental 5.4 and 6 (the versions blockbase 2 runs on) no longer read; it
   now declares `$class_description`.
 
+### Changed
+
+- **`BlockNewsItems` is usable on Silverstripe 5 and 6 with blockbase 2.0.0** (issue #6). The
+  README and the `suggest` entry no longer say it waits for a blockbase release. The 3.1.0 entry
+  below is left as it was at release.
+
 ## 3.1.0 (2026-09-25)
 
 Silverstripe 5 and 6 from one line (`main`, renamed from `master`). Silverstripe 4 is not

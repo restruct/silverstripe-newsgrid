@@ -95,9 +95,8 @@ Each of these is picked up automatically when the package is installed, and igno
 - **[restruct/silverstripe-blockbase](https://github.com/restruct/blockbase)**: declares the
   `BlockNewsItems` block, which shows the most recent news items (optionally limited to one
   filterablearchive category) with an optional link to the first News section. Without blockbase
-  the class is not declared at all. **Not usable yet on Silverstripe 5 or 6:** blockbase's
-  releases so far (up to 1.0.8, and `dev-main`) require Silverstripe 4, so this integration needs
-  a blockbase release that supports Silverstripe 5/6.
+  the class is not declared at all. Needs blockbase `^2` (Silverstripe 5 and 6, elemental `^5.4 || ^6`);
+  blockbase 1.x requires Silverstripe 4.
 
 ## Public API
 
@@ -128,12 +127,13 @@ SS_PHPUNIT_FLUSH=1 vendor/bin/phpunit vendor/restruct/silverstripe-newsgrid/test
 
 `.github/workflows/ci.yml` builds exactly such a host project for each supported major.
 
-Two checks skip themselves on purpose, so the test count depends on what the host has installed:
+Some checks skip themselves on purpose, so the test count depends on what the host has installed:
 
 - `NewsGridTemplatesTest` (3 tests) is skipped when restruct/silverstripe-filterablearchive is
   installed. It checks that the templates render *without* that module (its includes are guarded
   so a missing template does not throw), which a host that has it cannot show. The other side, the
   includes rendering when filterablearchive is present, is covered by `NewsGridTemplateGuardTest`
   with a stand-in, which runs either way.
-- `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed.
-  blockbase currently requires Silverstripe 4, so on Silverstripe 5 and 6 it always runs.
+- `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed,
+  and `ModuleConfigTest::testBlockTypeDescriptionIsReadByElemental` when it is not. Run the suite
+  once with and once without blockbase `^2` (and filterablearchive) to cover both sides.
