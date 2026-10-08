@@ -28,10 +28,19 @@ use SilverStripe\Core\Extension;
 class PaginatedItemsFallback extends Extension
 {
     /**
-     * @return \SilverStripe\ORM\PaginatedList|\SilverStripe\Model\List\PaginatedList
+     * @return \SilverStripe\ORM\PaginatedList|\SilverStripe\Model\List\PaginatedList|mixed the record's
+     *         own PaginatedItems() when it has one
      */
     public function PaginatedItems()
     {
+        # A project may already give its News section record a PaginatedItems() (e.g. a workaround
+        # from before this fallback existed). The controller's extension method would otherwise hide
+        # it, because the template asks the controller first and the record only as a failover.
+        $record = $this->getOwner()->data();
+        if ($record && $record->hasMethod('PaginatedItems')) {
+            return $record->PaginatedItems();
+        }
+
         $items = NewsGridPage::get()
             ->filter('ParentID', $this->getOwner()->data()->ID)
             ->sort('Date', 'DESC');

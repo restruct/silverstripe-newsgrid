@@ -38,6 +38,11 @@
 - Config `NewsGridHolder.items_per_page` (default `12`, `0` = no pagination): page length of that
   list, read from the section's own class (a `NewsGridHolder` subclass can set its own). Without filterablearchive the section template renders page links from the new
   `Includes/NewsGridPagination.ss`, in the same markup as filterablearchive's Bootstrap pagination.
+  If your News section record already has its own `PaginatedItems()` (for example a workaround for
+  issue #7), that one is still used.
+- **If your project overrides `Layout/NewsGridHolder.ss` and does not use filterablearchive:** the
+  list now shows the first `items_per_page` (12) items only, and your template has no page links
+  until you add `<% include NewsGridPagination %>` below the list (or set `items_per_page: 0`).
 
 ### Changed
 

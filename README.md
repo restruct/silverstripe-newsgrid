@@ -106,7 +106,7 @@ Each of these is picked up automatically when the package is installed, and igno
 | `getLumberjackPagesForGridfield()` | `NewsGridHolder` | The News section's own news items as `NewsGridPage` records, so the grid can sort on `Date`. |
 | `getLumberjackTitle()` | `NewsGridHolder` | The grid's title (translatable, `NEWSGRID.NewsItems`). |
 | `formattedPublishDate()` | `NewsGridPage` | The item's `Date` through `Format('d MMM y')` (a CLDR pattern, not a PHP `date()` one): day, abbreviated month name and calendar year, e.g. `2 Jan 2026`. The month name follows the site locale (`nl_NL`: `2 jan 2026`). Before 3.1.0 it used `d M Y`, which rendered `2 1 2026` (month number, week-year). |
-| `PaginatedItems()` | `NewsGridHolderController` | The News section's news items for its page, newest first, in the current reading mode. Provided by filterablearchive (filtered and paginated) when installed; otherwise by this module's `Extensions\PaginatedItemsFallback`, applied only then, paginated by `items_per_page` over the request's `?start=`. |
+| `PaginatedItems()` | `NewsGridHolderController` | The News section's news items for its page, newest first, in the current reading mode. Provided by filterablearchive (filtered and paginated) when installed; otherwise by this module's `Extensions\PaginatedItemsFallback`, applied only then, paginated by `items_per_page` over the request's `?start=`. A `PaginatedItems()` on the section record itself takes precedence over the fallback. A project template overriding `Layout/NewsGridHolder.ss` needs `<% include NewsGridPagination %>` for the page links. |
 | `DateFieldComment()` | `NewsGridPage` | `(x minutes ago)` for items dated within the last hour; requires filterablearchive. |
 | `RecentNewsItems($limit = 3)` | `BlockNewsItems` | The most recent news items, optionally filtered by category. |
 | `NewsSectionLink()` | `BlockNewsItems` | The first News section, labelled for the "all news" link, or `null` when no label is set or no News section exists. |
@@ -137,8 +137,8 @@ Some checks skip themselves on purpose, so the test count depends on what the ho
   includes rendering when filterablearchive is present, is covered by `NewsGridTemplateGuardTest`
   with a stand-in, which runs either way.
 - `NewsGridPageDateFieldTest::testFilterablearchivesOwnDateFieldIsNotDuplicated` is skipped when
-  filterablearchive is not installed; the two `NewsGridLayoutContentTest` pagination tests
-  (`items_per_page`) when it is.
+  filterablearchive is not installed; the four `NewsGridLayoutContentTest` tests of the fallback
+  list (pagination, a subclass's `items_per_page`, a record's own `PaginatedItems()`) when it is.
 - `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed;
   `ModuleConfigTest::testBlockTypeDescriptionIsReadByElemental` and `BlockNewsItemsCmsFieldsTest`
   when it is not.

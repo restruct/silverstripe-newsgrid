@@ -9,6 +9,7 @@ use Restruct\SilverStripe\NewsGrid\NewsGridPageController;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use Restruct\SilverStripe\NewsGrid\Extensions\PaginatedItemsFallback;
+use Restruct\SilverStripe\NewsGrid\Tests\NewsGridLayoutContentTest\OwnListHolder;
 use Restruct\SilverStripe\NewsGrid\Tests\NewsGridLayoutContentTest\PagedHolder;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\SapphireTest;
@@ -34,6 +35,7 @@ class NewsGridLayoutContentTest extends SapphireTest
 
     protected static $extra_dataobjects = [
         PagedHolder::class,
+        OwnListHolder::class,
     ];
 
     /**
@@ -189,5 +191,18 @@ class NewsGridLayoutContentTest extends SapphireTest
         preg_match_all('#<h4 class="mb-0">(.*?)</h4>#s', $html, $titles);
         $this->assertSame(['Newer item'], array_map('trim', $titles[1]));
         $this->assertStringContainsString('<nav class="pagination_container">', $html);
+    }
+
+    public function testWithoutFilterablearchiveARecordsOwnPaginatedItemsIsNotHidden()
+    {
+        if (ClassInfo::exists('Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension')) {
+            $this->markTestSkipped('the fallback is not applied with filterablearchive');
+        }
+        [$holder] = $this->makeSection(OwnListHolder::class);
+
+        $html = $this->renderLive(NewsGridHolderController::class, $holder->ID, NewsGridHolder::class);
+
+        preg_match_all('#<h4 class="mb-0">(.*?)</h4>#s', $html, $titles);
+        $this->assertSame(['Older item'], array_map('trim', $titles[1]), "the record's own list");
     }
 }
