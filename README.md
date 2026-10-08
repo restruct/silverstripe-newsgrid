@@ -135,6 +135,13 @@ Some checks skip themselves on purpose, so the test count depends on what the ho
   so a missing template does not throw), which a host that has it cannot show. The other side, the
   includes rendering when filterablearchive is present, is covered by `NewsGridTemplateGuardTest`
   with a stand-in, which runs either way.
-- `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed,
-  and `ModuleConfigTest::testBlockTypeDescriptionIsReadByElemental` when it is not. Run the suite
-  once with and once without blockbase `^2` (and filterablearchive) to cover both sides.
+- `NewsGridPageDateFieldTest::testFilterablearchivesOwnDateFieldIsNotDuplicated` is skipped when
+  filterablearchive is not installed.
+- `ModuleConfigTest::testBlockIsNotDeclaredWithoutBlockbase` is skipped when blockbase is installed;
+  `ModuleConfigTest::testBlockTypeDescriptionIsReadByElemental` and `BlockNewsItemsCmsFieldsTest`
+  when it is not.
+
+`NewsGridLayoutContentTest` and `BlockNewsItemsCmsFieldsTest` expect different things with and
+without filterablearchive and both pass either way. To cover every side, run the suite on a host
+without the optional modules and on one with blockbase `^2` and filterablearchive `^3.1`; blockbase
+without filterablearchive is the combination that once broke `BlockNewsItems`' CMS fields.
