@@ -12,6 +12,21 @@
   installed and filterablearchive not, opening the block threw `the method 'Categories' does not
   exist`. The filter is now offered only when filterablearchive is installed. Found while running
   the suite with blockbase 2 installed (issue #6).
+- **Without filterablearchive the News section page lists its news items, and an item's page links
+  back to its section** (issue #7). The section's Layout template loops over `$PaginatedItems`,
+  which only filterablearchive provided, so the page listed no items (Silverstripe 5 rendered one
+  empty entry); and the item's link back read `$HolderPage`, also filterablearchive's, so it had no
+  URL and no text. Without filterablearchive, the new `Extensions\PaginatedItemsFallback` now gives
+  `NewsGridHolderController` a `PaginatedItems()` (the section's items, newest first, all on one
+  page); it is applied only when filterablearchive is absent, so its own filtered and paginated list
+  is unchanged. The link back reads `$Parent`, which is the News section with or without
+  filterablearchive.
+
+### Added
+
+- `Extensions\PaginatedItemsFallback` (see issue #7 above): `PaginatedItems()` on
+  `NewsGridHolderController` when filterablearchive is not installed. If your project's own
+  section template loops over `$PaginatedItems`, it now lists items without filterablearchive too.
 
 ### Changed
 

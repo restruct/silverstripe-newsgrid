@@ -55,6 +55,18 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 
 
 ---
+Name: newsgridnofilterable
+Except:
+  classexists: Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension
+---
+# Without filterablearchive the section's Layout template still needs $PaginatedItems (issue #7).
+# Applied only then, so filterablearchive's own PaginatedItems() is never shadowed.
+Restruct\SilverStripe\NewsGrid\NewsGridHolderController:
+  extensions:
+    - Restruct\SilverStripe\NewsGrid\Extensions\PaginatedItemsFallback
+
+
+---
 Name: newsgridembargo
 Only:
   classexists: Restruct\SilverStripe\SoftScheduler\EmbargoExpiryExtension

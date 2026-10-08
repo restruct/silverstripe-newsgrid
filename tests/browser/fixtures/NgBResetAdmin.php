@@ -9,6 +9,7 @@ use SilverStripe\CMS\Controllers\ModelAsController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 
 /**
@@ -18,7 +19,7 @@ use SilverStripe\View\Parsers\URLSegmentFilter;
  * And renders a page's front-end layout: GET /admin/ng-reset/layout?id=... The scratch host has no
  * theme, so there is no main Page.ss and the page's own URL cannot render; this renders the
  * module's Layout template for the page type (templates/Restruct/SilverStripe/NewsGrid/Layout/)
- * in the scope of the page's own controller, inside a bare HTML document.
+ * in the scope of the page's own controller, on the Live stage, inside a bare HTML document.
  *
  * The section (published) holds three news items in the three states its grid shows:
  *   "Published item"  2025-12-30, published
@@ -39,17 +40,31 @@ class NgBResetAdmin extends LeftAndMain
 
     public function layout(HTTPRequest $request): HTTPResponse
     {
-        $page = SiteTree::get()->byID((int) $request->getVar('id'));
+        # On the Live stage, as a visitor sees the page: the admin itself reads the draft stage, which
+        # would list draft-only news items and show unpublished edits (issue #7's list spec). The
+        # admin also makes draft the DEFAULT reading mode, and links rendered off the default get
+        # "?stage=Live" appended, which a visitor's links never carry; so Live is made the default
+        # for the render too, and restored after it.
+        $defaultMode = Versioned::get_default_reading_mode();
+        [$page, $layout] = Versioned::withVersionedMode(function () use ($request, $defaultMode) {
+            Versioned::set_default_reading_mode(Versioned::DEFAULT_MODE);
+            Versioned::set_stage(Versioned::LIVE);
+            $page = SiteTree::get()->byID((int) $request->getVar('id'));
+            if (!$page) {
+                return [null, ''];
+            }
+            $controller = ModelAsController::controller_for($page);
+            $controller->setRequest($request);
+            $controller->pushCurrent();
+            try {
+                return [$page, (string) $controller->renderWith(['type' => 'Layout', get_class($page)])];
+            } finally {
+                $controller->popCurrent();
+                Versioned::set_default_reading_mode($defaultMode);
+            }
+        });
         if (!$page) {
-            return $this->httpError(404, 'no such page');
-        }
-        $controller = ModelAsController::controller_for($page);
-        $controller->setRequest($request);
-        $controller->pushCurrent();
-        try {
-            $layout = (string) $controller->renderWith(['type' => 'Layout', get_class($page)]);
-        } finally {
-            $controller->popCurrent();
+            return $this->httpError(404, 'no such page (or not published)');
         }
 
         return HTTPResponse::create(

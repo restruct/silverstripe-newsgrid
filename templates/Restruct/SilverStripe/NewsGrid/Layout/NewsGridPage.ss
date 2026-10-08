@@ -13,7 +13,11 @@
             $Content
             $Form
 
+            <%-- $HolderPage comes from filterablearchive's ItemExtension only, so without it this link had no URL and no text (issue #7).
+                 A news item's parent is always its News section (can_be_root is false, only NewsGridHolder allows it as a child).
             <div class="newsuplink"><a href="$HolderPage.Link" class="text-decoration-none">&larr; $HolderPage.MenuTitle</a></div>
+            --%>
+            <div class="newsuplink"><a href="$Parent.Link" class="text-decoration-none">&larr; $Parent.MenuTitle</a></div>
 
         </div>
 

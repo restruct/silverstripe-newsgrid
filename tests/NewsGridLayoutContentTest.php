@@ -1,0 +1,107 @@
+<?php
+
+namespace Restruct\SilverStripe\NewsGrid\Tests;
+
+use Restruct\SilverStripe\NewsGrid\NewsGridHolder;
+use Restruct\SilverStripe\NewsGrid\NewsGridHolderController;
+use Restruct\SilverStripe\NewsGrid\NewsGridPage;
+use Restruct\SilverStripe\NewsGrid\NewsGridPageController;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
+use Restruct\SilverStripe\NewsGrid\Extensions\PaginatedItemsFallback;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Versioned\Versioned;
+
+/**
+ * Issue #7: what the front-end Layout templates list and link, with AND without
+ * filterablearchive (unlike NewsGridTemplatesTest, this runs either way).
+ *
+ * - The News section layout lists its published news items, newest first. Without filterablearchive,
+ *   whose HolderControllerExtension provides $PaginatedItems, it used to list none (Silverstripe 5
+ *   rendered one empty entry instead).
+ * - A news item's layout links back to its News section. Without filterablearchive, whose
+ *   ItemExtension provides $HolderPage, the link had no URL and no text.
+ *
+ * Rendered on the Live stage, as a visitor sees it.
+ *
+ * Compatibility note: runs under PHPUnit 9 (Silverstripe 5) and PHPUnit 11 (Silverstripe 6).
+ */
+class NewsGridLayoutContentTest extends SapphireTest
+{
+    protected $usesDatabase = true;
+
+    /**
+     * A published section with two published items and one draft-only item, newest last.
+     */
+    private function makeSection(): array
+    {
+        $holder = NewsGridHolder::create(['Title' => 'News', 'URLSegment' => 'news']);
+        $holder->write();
+        $holder->publishSingle();
+        $items = [];
+        foreach ([['Older item', '2025-12-30', true], ['Newer item', '2026-01-02', true], ['Draft item', '2026-01-05', false]] as [$title, $date, $publish]) {
+            $item = NewsGridPage::create(['Title' => $title, 'ParentID' => $holder->ID, 'Date' => $date, 'Content' => "<p>About $title.</p>"]);
+            $item->write();
+            if ($publish) {
+                $item->publishSingle();
+            }
+            $items[$title] = $item;
+        }
+
+        return [$holder, $items];
+    }
+
+    private function renderLive(string $controllerClass, int $pageID, string $pageClass): string
+    {
+        return Versioned::withVersionedMode(function () use ($controllerClass, $pageID, $pageClass) {
+            Versioned::set_stage(Versioned::LIVE);
+            $page = $pageClass::get()->byID($pageID);
+            $controller = $controllerClass::create($page);
+            $request = new HTTPRequest('GET', '/');
+            $request->setSession(new Session([]));
+            $controller->setRequest($request);
+            // Current, as during a real request (anything reading Controller::curr() sees this page)
+            $controller->pushCurrent();
+            try {
+                return (string) $controller->renderWith(['type' => 'Layout', $pageClass]);
+            } finally {
+                $controller->popCurrent();
+            }
+        });
+    }
+
+    public function testNewsSectionLayoutListsItsPublishedItemsNewestFirst()
+    {
+        [$holder] = $this->makeSection();
+
+        $html = $this->renderLive(NewsGridHolderController::class, $holder->ID, NewsGridHolder::class);
+
+        preg_match_all('#<h4 class="mb-0">(.*?)</h4>#s', $html, $titles);
+        $this->assertSame(['Newer item', 'Older item'], array_map('trim', $titles[1]));
+        // One entry per item: no empty entry for a missing list
+        $this->assertSame(2, substr_count($html, '<li>'));
+    }
+
+    public function testNewsItemLayoutLinksBackToItsNewsSection()
+    {
+        [$holder, $items] = $this->makeSection();
+
+        $html = $this->renderLive(NewsGridPageController::class, $items['Older item']->ID, NewsGridPage::class);
+
+        $this->assertMatchesRegularExpression(
+            '#<div class="newsuplink"><a href="' . preg_quote($holder->Link(), '#') . '" [^>]*>&larr; News</a></div>#',
+            $html
+        );
+    }
+
+    public function testFallbackListIsAppliedOnlyWithoutFilterablearchive()
+    {
+        // Where filterablearchive is installed, its PaginatedItems() (with filters and pagination) must
+        // be the one the template gets, so the fallback must not be applied next to it (two extensions
+        // declaring one method name leave which one answers to the extension machinery).
+        $withFilterable = ClassInfo::exists('Restruct\SilverStripe\FilterableArchive\Extensions\HolderControllerExtension');
+
+        $this->assertSame(!$withFilterable, NewsGridHolderController::has_extension(PaginatedItemsFallback::class));
+    }
+}
