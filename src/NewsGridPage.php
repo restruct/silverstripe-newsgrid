@@ -5,6 +5,7 @@ namespace Restruct\SilverStripe\NewsGrid;
 use Override;
 use Page;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\FieldList;
 
 class NewsGridPage extends Page
@@ -86,6 +87,15 @@ class NewsGridPage extends Page
         $fields->insertAfter('FeaturedImages',
             CheckboxField::create('NoAutoImage', _t('NewsGrid.NoAutoInsertImage', 'Do NOT auto-insert the page image into the content'))
         );
+
+        # Date (issue #8): the item's sort key must be editable. Silverstripe 6 scaffolds it from $db (after
+        # Content); Silverstripe 5's SiteTree does not scaffold, and filterablearchive adds one only while
+        # its date archive is active, so on SS5 there was often none. Use whichever Date field is there
+        # (filterablearchive's keeps its own form field), else add one, and place it directly before
+        # Content (where filterablearchive puts it), so every combination shows it in the same place.
+        $dateField = $fields->dataFieldByName('Date') ?: DateField::create('Date', $this->fieldLabel('Date'));
+        $fields->removeByName('Date');
+        $fields->insertBefore('Content', $dateField);
 
         // Reorder some fields
         if($schedulerField = $fields->fieldByName('Root.Main.SoftScheduler')) {

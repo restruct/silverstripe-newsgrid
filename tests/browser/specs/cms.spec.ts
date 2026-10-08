@@ -82,14 +82,15 @@ test('"Add new NewsItem" creates a news item inside the section, which then show
     expect((await gridRows(newsGrid(page)))[0]).toEqual(['Breaking news', 'Draft']);
 });
 
-test('a news item\'s date can be set in the CMS (https://github.com/restruct/silverstripe-newsgrid/issues/8)', async ({ page }, testInfo) => {
-    // Silverstripe 5 builds page fields by hand and the module adds no Date field, so without
-    // filterablearchive (whose ItemExtension adds one) a news item's date cannot be edited there.
-    // Silverstripe 6 scaffolds it from the db field.
-    test.fixme(testInfo.project.name === 'ss5', 'no Date field on Silverstripe 5 without filterablearchive');
+test('a news item\'s date can be set in the CMS, directly before Content (https://github.com/restruct/silverstripe-newsgrid/issues/8)', async ({ page }) => {
+    // Issue #8: Silverstripe 5 builds page fields by hand and the module added no Date field, so
+    // without filterablearchive (whose ItemExtension adds one) a news item's date could not be edited
+    // there; Silverstripe 6 scaffolded it after Content. The module now places one before Content.
     const section = await reseed(page, 'Item date');
     const id = section.items['Published item'];
     const form = await openInCms(page, id);
+    const fields = await mainTabFields(form);
+    expect(fields[fields.indexOf('Form_EditForm_Content_Holder') - 1]).toBe('Form_EditForm_Date_Holder');
     const date = form.locator('input[name="Date"]');
     await expect(date).toHaveValue('2025-12-30');
     await date.fill('2024-02-29');

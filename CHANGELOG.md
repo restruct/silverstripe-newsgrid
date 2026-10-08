@@ -21,6 +21,12 @@
   page); it is applied only when filterablearchive is absent, so its own filtered and paginated list
   is unchanged. The link back reads `$Parent`, which is the News section with or without
   filterablearchive.
+- **A news item's Date can be edited on Silverstripe 5** (issue #8). Silverstripe 5 does not
+  scaffold page fields from `$db`, and filterablearchive adds a Date field only while its date
+  archive is active, so the date usually stayed the day the item was created. The edit form now
+  always has one Date field, directly before Content, on both majors and with or without
+  filterablearchive (whose own field is kept, not duplicated). On Silverstripe 6 this moves the
+  scaffolded field from after Content to before it.
 
 ### Added
 
