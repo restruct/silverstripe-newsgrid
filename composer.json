@@ -1,6 +1,7 @@
 {
   "name": "restruct/silverstripe-newsgrid",
-  "description": "Manage News items from a Gridfield to prevent cluttering the sitetree",
+  "description": "News items managed in a grid on a News section page instead of the CMS site tree, with a paginated news list on the site (Silverstripe 5 and 6)",
+  "keywords": ["silverstripe", "silverstripe-module", "silverstripe-cms", "news", "blog", "gridfield", "lumberjack"],
   "type": "silverstripe-vendormodule",
   "license": "MIT",
   "authors": [ { "name": "Restruct", "email": "dev@restruct.nl", "homepage": "https://restruct.nl" } ],
