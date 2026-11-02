@@ -227,4 +227,4 @@ regenerate them.
 
 ### Changelog and license
 
-Release history: [CHANGELOG.md](CHANGELOG.md). License: MIT (declared in `composer.json`).
+Release history: [CHANGELOG.md](CHANGELOG.md). License: MIT, see [LICENSE](LICENSE).
