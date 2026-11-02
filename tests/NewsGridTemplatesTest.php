@@ -9,6 +9,7 @@ use Restruct\SilverStripe\NewsGrid\NewsGridPageController;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\i18n\i18n;
 
 /**
  * The module's templates must render when the optional modules are NOT installed.
@@ -78,5 +79,23 @@ class NewsGridTemplatesTest extends SapphireTest
 
         $this->assertStringContainsString('Item one', $html);
         $this->assertStringContainsString('newsitem-tile-holder', $html);
+    }
+
+    public function testNewsItemTileReadMoreFollowsTheLocale()
+    {
+        // Issue #10: the tile's "read more" label was hardcoded Dutch ("Lees meer") on every site.
+        [, $item] = $this->makeHolderWithItem();
+
+        $en = i18n::with_locale('en_US', function () use ($item) {
+            return (string) $item->renderWith('Includes/NewsItemTile');
+        });
+        $nl = i18n::with_locale('nl_NL', function () use ($item) {
+            return (string) $item->renderWith('Includes/NewsItemTile');
+        });
+
+        $this->assertStringContainsString('Read more', $en);
+        $this->assertStringNotContainsString('Lees meer', $en);
+        // Dutch sites keep the text they had.
+        $this->assertStringContainsString('Lees meer', $nl);
     }
 }

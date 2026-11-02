@@ -3,6 +3,7 @@ nl:
     NewsItems: Nieuwsberichten
   NewsGrid:
     NoAutoInsertImage: 'Voeg de afbeelding NIET automatisch toe in de inhoud van het bericht'
+    ReadMore: 'Lees meer'
     Related: Gerelateerd
   Restruct\SilverStripe\NewsGrid\NewsGridHolder:
     CLASS_DESCRIPTION: 'Maak een pagina aan voor uw nieuwsberichten/archief'

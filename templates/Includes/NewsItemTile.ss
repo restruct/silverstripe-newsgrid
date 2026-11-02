@@ -10,7 +10,9 @@
 <%--            $Content.FirstParagraph--%>
 <%--            <small class="text-muted">&rarr;</small>--%>
 <%--        </p>--%>
-        <span class="text-body-secondary">Lees meer &rarr;</span>
+<%--        <span class="text-body-secondary">Lees meer &rarr;</span>--%>
+        <%-- Translatable label (issue #10): was hardcoded Dutch on every site; nl.yml keeps "Lees meer" --%>
+        <span class="text-body-secondary"><%t NewsGrid.ReadMore 'Read more' %> &rarr;</span>
     </a>
 </div>
 
