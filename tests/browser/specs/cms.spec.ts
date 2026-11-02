@@ -44,10 +44,12 @@ test('the News section is in the site tree with the module\'s icon', async ({ pa
     expect(await icon.evaluate((el) => getComputedStyle(el).backgroundImage)).toContain('/silverstripe-newsgrid/client/images/newsholder.png');
 });
 
-test('news items stay out of the site tree (https://github.com/restruct/silverstripe-admintweaks/issues/62)', async ({ page }, testInfo) => {
-    // hide_from_cms_tree works through admintweaks' SelectiveLumberjack, whose filter never applies
-    // on Silverstripe 6 (it checks for CMSPagesController, which cms 6 does not have): upstream bug.
-    test.fixme(testInfo.project.name === 'ss6', 'admintweaks#62: SelectiveLumberjack never filters on Silverstripe 6');
+test('news items stay out of the site tree (https://github.com/restruct/silverstripe-admintweaks/issues/105)', async ({ page }, testInfo) => {
+    // hide_from_cms_tree works through admintweaks' SelectiveLumberjack. On Silverstripe 6 its filter
+    // did not apply to the tree the page edit screen loads (CMSPageEditController), so this page,
+    // opened in the editor, listed the news items: admintweaks#105, fixed in admintweaks 4.4.2 (and
+    // 3.23.2 for SS5), which composer.json now requires. Was fixme on ss6 until then.
+//    test.fixme(testInfo.project.name === 'ss6', 'admintweaks#62: SelectiveLumberjack never filters on Silverstripe 6');
     const section = await reseed(page, 'Section tree');
     await openInCms(page, section.id);
     const tree = page.locator('.cms-tree');

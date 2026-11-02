@@ -10,7 +10,7 @@
     "silverstripe/vendor-plugin": "^2 || ^3",
     "silverstripe/framework": "^5 || ^6",
     "silverstripe/lumberjack": "^3 || ^4",
-    "restruct/silverstripe-admintweaks": "^3 || ^4",
+    "restruct/silverstripe-admintweaks": "^3.23.2 || ^4.4.2",
     "restruct/silverstripe-featuredimages": "^4 || ^5"
   },
   "require-dev": {
