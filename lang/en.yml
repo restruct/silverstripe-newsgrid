@@ -3,6 +3,7 @@ en:
     NewsItems: Newsitems
   NewsGrid:
     NoAutoInsertImage: 'Do NOT auto-insert the page image into the content'
+    ReadMore: 'Read more'
     Related: Related
   Restruct\SilverStripe\NewsGrid\NewsGridHolder:
     CLASS_DESCRIPTION: 'Create a page to contain your news items/archive'
