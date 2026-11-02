@@ -1,10 +1,29 @@
-Newspages managed from a GridField to prevent SiteTree clutter
-==============================================================
+News grid for Silverstripe
+==========================
+
+Keep news items out of the CMS site tree. A News section page lists its news items in a grid
+directly below its Content, where editors add, open and publish them, and shows them on the site as
+a paginated list, newest first. Each news item is a normal page with a date and a featured image.
+For Silverstripe 5 and 6.
+
+![The edit form of a News section in the Silverstripe CMS: the Content editor, and below it an "Add new NewsItem" button and a grid of seven news items, newest first, each marked Published](docs/images/cms-news-section.png)
 
 *Maintained by [Restruct](https://github.com/restruct). If this module saves you time, you can
 [support ongoing maintenance](https://github.com/sponsors/restruct).*
 
-This module manages newsitems in a gridfield to prevent massive sitetrees.
+## Out of the box, every news item is a node in the site tree
+
+Silverstripe keeps pages in one site tree. News items are pages, so each one becomes a node under
+its parent, and after a year or two of news the archive outnumbers every other page on the site:
+the section has to be expanded and scrolled past to reach anything else, and finding one item
+means scrolling through all of them. Core has no page type that lists its children in a grid
+instead.
+
+This module manages news items in a grid on their News section (through
+[silverstripe/lumberjack](https://github.com/silverstripe/silverstripe-lumberjack)), and adds the
+two page types, their CMS fields and the front-end templates to go with it.
+
+## News sections and news items
 
 It adds two page types:
 
@@ -12,31 +31,79 @@ It adds two page types:
   listed in a grid on its Main tab, directly below Content, instead of in the CMS site tree.
 - **News item** (`Restruct\SilverStripe\NewsGrid\NewsGridPage`): a page with a `Date` and one or
   more featured images. Items can only be created inside a News section and are hidden from the
-  CMS site tree.
+  CMS site tree (on Silverstripe 6, see
+  [the site tree on Silverstripe 6](#known-issue-news-items-in-the-site-tree-on-silverstripe-6)).
 
-## Requirements
+### The news items grid
 
-* Silverstripe 5 or 6
-* PHP 8.1 or newer
-* [silverstripe/lumberjack](https://github.com/silverstripe/silverstripe-lumberjack),
-  [restruct/silverstripe-admintweaks](https://github.com/restruct/silverstripe-admintweaks) and
-  [restruct/silverstripe-featuredimages](https://github.com/restruct/silverstripe-featuredimages)
-  (installed automatically)
-* Your project's own `Page` and `PageController` classes: both page types extend them.
+The grid lists the section's own news items, newest first (`default_sort: Date DESC`), with their
+title and publication state: Published, Modified (published, with unpublished changes) or Draft.
+"Add new NewsItem" creates an item inside the section; a row opens the item in the editor. With
+`managed_object_date_field` set (filterablearchive sets it, see
+[Optional integrations](#optional-integrations)) the grid also shows a Date column, and with
+softscheduler a Scheduling column.
 
-## Installation
+### Editing a news item
 
-```
-composer require restruct/silverstripe-newsgrid
-```
+![The edit form of a news item: a Page Image(s) field holding one image, a "Do NOT auto-insert the page image into the content" checkbox, a Date field, and the Content editor below them](docs/images/cms-news-item.png)
 
-Then run `dev/build` (Silverstripe 5) or `sake db:build` (Silverstripe 6), and flush.
+A news item has a Date field directly before Content, on Silverstripe 5 and 6 and with or without
+filterablearchive. A new item is dated today. Its featured image comes from
+[restruct/silverstripe-featuredimages](https://github.com/restruct/silverstripe-featuredimages)
+(one image by default, its `max_featured_images` config). The news item layout shows that image
+next to the content; tick "Do NOT auto-insert the page image into the content" to leave it out (in
+templates: `$NoAutoImage`).
 
-## Version compatibility
+### On the site
+
+![The News section page on the site: the section's title and introduction, then four news items, each with its image, title and first paragraph, newest first, and page links 1 and 2 below them](docs/images/frontend-news-section.png)
+
+The module ships `Layout` templates for both page types (in
+`templates/Restruct/SilverStripe/NewsGrid/Layout/`), marked up with Bootstrap 5 classes; your
+theme's `Page.ss` provides the page around them. Override them in your theme like any other
+template.
+
+- **The News section page** lists its published news items, newest first, each with its featured
+  image, title and first paragraph, `items_per_page` (12) to a page with page links below
+  (`templates/Includes/NewsGridPagination.ss`).
+- **A news item page** shows its title, featured image and content, and a link back to its News
+  section.
+
+The screenshot above shows the templates with Bootstrap's stylesheet and four items to a page.
+
+### Optional integrations
+
+Each of these is picked up automatically when the package is installed, and ignored otherwise.
+
+- **[restruct/silverstripe-filterablearchive](https://github.com/restruct/silverstripe-filterablearchive)**:
+  date archive, categories and tags. Applies its holder, holder controller and item extensions,
+  sets `managed_object_date_field: Date` and `pagination_control_tab: Root.Filtering`, and the
+  templates show the filter, the item properties and pagination.
+- **[restruct/silverstripe-softscheduler](https://github.com/restruct/silverstripe-softscheduler)**:
+  scheduled publication and expiry. Applies `EmbargoExpiryExtension` to news items, adds a
+  "Scheduling" column to the grid, and moves the scheduling fields below Content.
+- **[restruct/silverstripe-blockbase](https://github.com/restruct/blockbase)**: declares the
+  `BlockNewsItems` block, which shows the most recent news items (optionally limited to one
+  filterablearchive category) with an optional link to the first News section. Without blockbase
+  the class is not declared at all. Needs blockbase `^2` (Silverstripe 5 and 6, elemental `^5.4 || ^6`);
+  blockbase 1.x requires Silverstripe 4.
+
+### Known issue: news items in the site tree on Silverstripe 6
+
+On Silverstripe 6, news items are left out of the site tree only while it is loaded from the Pages
+screen (`admin/pages`). Once a page is open in the editor (`admin/pages/edit/...`, including a
+reload of that screen), the tree is loaded again and lists the news items under their section.
+On Silverstripe 5 they stay out of the tree on both screens. The filtering is done by
+`SelectiveLumberjack` from restruct/silverstripe-admintweaks, which this module applies; the fix
+is tracked in [admintweaks#105](https://github.com/restruct/silverstripe-admintweaks/issues/105).
+
+## Technical
+
+### Version compatibility
 
 | Branch | Module version | Silverstripe | PHP |
 |--------|----------------|--------------|-----|
-| `main` | `3.1.x` | `^5 \|\| ^6` | `^8.1` |
+| `main` | `3.1.x`, `3.2.x` | `^5 \|\| ^6` | `^8.1` |
 | (tags only) | `3.0.x` | `^6` | not declared |
 | `v2` | `2.0.x` | `^4 \|\| ^5` | not declared |
 
@@ -50,7 +117,29 @@ was published as `micschk/silverstripe-newsgrid`.
 
 Upgrading from 2.x or 3.0.x? See [CHANGELOG.md](CHANGELOG.md).
 
-## Configuration
+### Requirements
+
+* Silverstripe 5 or 6
+* PHP 8.1 or newer
+* [silverstripe/lumberjack](https://github.com/silverstripe/silverstripe-lumberjack),
+  [restruct/silverstripe-admintweaks](https://github.com/restruct/silverstripe-admintweaks) and
+  [restruct/silverstripe-featuredimages](https://github.com/restruct/silverstripe-featuredimages)
+  (installed automatically)
+* Your project's own `Page` and `PageController` classes: both page types extend them.
+
+### Installation
+
+```
+composer require restruct/silverstripe-newsgrid
+```
+
+Then run `dev/build` (Silverstripe 5) or `sake db:build` (Silverstripe 6), and flush.
+
+A database carrying the Silverstripe 3 class names (`NewsGridHolder`, `NewsGridPage`, from
+`micschk/silverstripe-newsgrid`) is remapped to the namespaced classes during that build
+(`_config/upgrade.yml`).
+
+### Configuration
 
 Everything below is set by the module's own `_config/config.yml`; override it in your project's
 YAML as needed.
@@ -82,24 +171,7 @@ Restruct\SilverStripe\NewsGrid\NewsGridPage:
 The CMS stylesheet `client/css/newsgridpages.css` is added to every admin screen through
 `LeftAndMain.extra_requirements_css`.
 
-## Optional integrations
-
-Each of these is picked up automatically when the package is installed, and ignored otherwise.
-
-- **[restruct/silverstripe-filterablearchive](https://github.com/restruct/silverstripe-filterablearchive)**:
-  date archive, categories and tags. Applies its holder, holder controller and item extensions,
-  sets `managed_object_date_field: Date` and `pagination_control_tab: Root.Filtering`, and the
-  templates show the filter, the item properties and pagination.
-- **[restruct/silverstripe-softscheduler](https://github.com/restruct/silverstripe-softscheduler)**:
-  scheduled publication and expiry. Applies `EmbargoExpiryExtension` to news items, adds a
-  "Scheduling" column to the grid, and moves the scheduling fields below Content.
-- **[restruct/silverstripe-blockbase](https://github.com/restruct/blockbase)**: declares the
-  `BlockNewsItems` block, which shows the most recent news items (optionally limited to one
-  filterablearchive category) with an optional link to the first News section. Without blockbase
-  the class is not declared at all. Needs blockbase `^2` (Silverstripe 5 and 6, elemental `^5.4 || ^6`);
-  blockbase 1.x requires Silverstripe 4.
-
-## Public API
+### Public API
 
 | Method | On | Returns |
 |--------|----|---------|
@@ -114,7 +186,7 @@ Each of these is picked up automatically when the package is installed, and igno
 In templates, `$NoAutoImage` on a news item tells the layout not to insert the featured image into
 the content automatically.
 
-## Running the tests
+### Running the tests
 
 The suite needs a booted Silverstripe project that provides `Page` and `PageController`. Install the
 module as a symlinked path repository (a dist install contains no tests), then:
@@ -147,3 +219,12 @@ Some checks skip themselves on purpose, so the test count depends on what the ho
 without filterablearchive and both pass either way. To cover every side, run the suite on a host
 without the optional modules and on one with blockbase `^2` and filterablearchive `^3.1`; blockbase
 without filterablearchive is the combination that once broke `BlockNewsItems`' CMS fields.
+
+Browser tests (Playwright, against a real CMS) live in `tests/browser/` and run in
+`.github/workflows/browser-tests.yml`. The screenshots in this README are generated from the same
+fixtures; see [tests/browser/screenshots/README.md](tests/browser/screenshots/README.md) to
+regenerate them.
+
+### Changelog and license
+
+Release history: [CHANGELOG.md](CHANGELOG.md). License: MIT (declared in `composer.json`).
