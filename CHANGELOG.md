@@ -1,5 +1,26 @@
 # Changelog
 
+## 3.3.0 (2026-11-02)
+
+### Fixed
+
+- **News items stay out of the site tree on Silverstripe 6 with a page open in the editor.** The
+  filtering is admintweaks' `SelectiveLumberjack`, which did not apply to the tree the page edit
+  screen loads (admintweaks#105). Fixed in admintweaks 4.4.2 (and 3.23.2 for Silverstripe 5), and
+  `composer.json` now requires `^3.23.2 || ^4.4.2`. The README's "Known issue" section is gone, and
+  the browser spec `news items stay out of the site tree`, `fixme` on Silverstripe 6 until now,
+  runs on both majors.
+- **The news tile's "read more" label is translatable** (#10). `NewsItemTile.ss` (used by the
+  `BlockNewsItems` block) showed the Dutch "Lees meer" on every site; it now uses
+  `<%t NewsGrid.ReadMore 'Read more' %>`, with "Read more" in `lang/en.yml` and "Lees meer" in
+  `lang/nl.yml`, so Dutch sites keep their text.
+
+### Changed
+
+- Minimum `restruct/silverstripe-admintweaks` raised to `^3.23.2 || ^4.4.2` (was `^3 || ^4`).
+- Added the MIT `LICENSE` file `composer.json` already declared; the README's licence line points
+  at it.
+
 ## 3.2.0 (2026-10-08)
 
 ### Fixed

@@ -31,8 +31,7 @@ It adds two page types:
   listed in a grid on its Main tab, directly below Content, instead of in the CMS site tree.
 - **News item** (`Restruct\SilverStripe\NewsGrid\NewsGridPage`): a page with a `Date` and one or
   more featured images. Items can only be created inside a News section and are hidden from the
-  CMS site tree (on Silverstripe 6, see
-  [the site tree on Silverstripe 6](#known-issue-news-items-in-the-site-tree-on-silverstripe-6)).
+  CMS site tree.
 
 ### The news items grid
 
@@ -88,22 +87,13 @@ Each of these is picked up automatically when the package is installed, and igno
   the class is not declared at all. Needs blockbase `^2` (Silverstripe 5 and 6, elemental `^5.4 || ^6`);
   blockbase 1.x requires Silverstripe 4.
 
-### Known issue: news items in the site tree on Silverstripe 6
-
-On Silverstripe 6, news items are left out of the site tree only while it is loaded from the Pages
-screen (`admin/pages`). Once a page is open in the editor (`admin/pages/edit/...`, including a
-reload of that screen), the tree is loaded again and lists the news items under their section.
-On Silverstripe 5 they stay out of the tree on both screens. The filtering is done by
-`SelectiveLumberjack` from restruct/silverstripe-admintweaks, which this module applies; the fix
-is tracked in [admintweaks#105](https://github.com/restruct/silverstripe-admintweaks/issues/105).
-
 ## Technical
 
 ### Version compatibility
 
 | Branch | Module version | Silverstripe | PHP |
 |--------|----------------|--------------|-----|
-| `main` | `3.1.x`, `3.2.x` | `^5 \|\| ^6` | `^8.1` |
+| `main` | `3.1.x` to `3.3.x` | `^5 \|\| ^6` | `^8.1` |
 | (tags only) | `3.0.x` | `^6` | not declared |
 | `v2` | `2.0.x` | `^4 \|\| ^5` | not declared |
 
